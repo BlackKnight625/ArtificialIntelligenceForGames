@@ -75,7 +75,7 @@ public class PathfindingManager : MonoBehaviour
         this.LoadGrid(gridPath);
 
        // Creating and Initializing the Pathfinding class, you can change the open, closed and heuristic sets here
-       this.pathfinding = new AStarPathfinding(new SimpleUnorderedNodeList(), new SimpleUnorderedNodeList(), new EuclideanDistance());
+       this.pathfinding = new AStarPathfinding(new NodePriorityHeap(), new ClosedDictionary(), new EuclideanDistance());
 
         visualGrid.GridMapVisual(textLines, this.pathfinding.grid);
 
