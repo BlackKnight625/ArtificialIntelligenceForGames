@@ -32,6 +32,35 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             float G;
             float H;
 
+            var childNode = neighbourNode;
+
+            childNode.gCost = parentNode.gCost + CalculateDistanceCost(parentNode, childNode);
+            childNode.hCost = Heuristic.H(childNode, GoalNode);
+            childNode.CalculateFCost();
+
+            if (neighbourNode.status == NodeStatus.Unvisited)
+            {
+                neighbourNode.gCost = childNode.gCost;
+                neighbourNode.hCost = childNode.hCost;
+                neighbourNode.CalculateFCost();
+            }
+            else if (neighbourNode.status == NodeStatus.Open)
+            {
+                if (childNode.fCost < neighbourNode.fCost)
+                {
+                    neighbourNode.gCost = childNode.gCost;
+                    neighbourNode.hCost = childNode.hCost;
+                    neighbourNode.CalculateFCost();
+                }
+            }
+            else if (neighbourNode.status == NodeStatus.Closed)
+            {
+                if (childNode.fCost < neighbourNode.fCost)
+                {
+                    Open.AddToOpen(childNode);
+                }
+            }
+            updateNodeStatus(childNode, NodeStatus.Open);
         }
                
             

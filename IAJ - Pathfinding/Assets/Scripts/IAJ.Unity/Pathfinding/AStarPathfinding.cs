@@ -106,8 +106,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                 
                 Closed.AddToClosed(CurrentNode);
                 Open.RemoveFromOpen(CurrentNode);
-                
-                grid.SetGridObject(CurrentNode.x, CurrentNode.y, CurrentNode);
+                updateNodeStatus(CurrentNode, NodeStatus.Closed);
 
                 foreach (var adjacent in GetNeighbourList(CurrentNode)) {
                     ProcessChildNode(CurrentNode, adjacent);
@@ -122,6 +121,11 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             return false;
         
     }
+        protected void updateNodeStatus(NodeRecord node, NodeStatus status)
+        {
+            node.status = status;
+            grid.SetGridObject(node.x, node.y, node);
+        }
 
         protected virtual void ProcessChildNode(NodeRecord parentNode, NodeRecord childNode) {
             var distance = parentNode.gCost + CalculateDistanceCost(parentNode, childNode);
@@ -150,8 +154,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             }
             
             childNode.CalculateFCost();
-            
-            grid.SetGridObject(childNode.x, childNode.y, childNode);
+            updateNodeStatus(childNode, NodeStatus.Open);
 
             MaxOpenNodes = Math.Max(MaxOpenNodes, Open.CountOpen());
         }
