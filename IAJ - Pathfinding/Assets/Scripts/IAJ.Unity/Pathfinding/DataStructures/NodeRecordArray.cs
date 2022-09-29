@@ -109,5 +109,10 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
         {
             return this.Open.CountOpen();
         }
+
+        public int CountClosed()
+        {
+            return 0;
+        }
     }
 }

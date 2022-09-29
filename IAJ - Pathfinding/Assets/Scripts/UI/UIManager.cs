@@ -20,6 +20,8 @@ public class UIManager : MonoBehaviour
     Text debugWalkable;
     Text debugtotalProcessedNodes;
     Text debugtotalProcessingTime;
+    Text debugopenListSize;
+    Text debugclosedListSize;
     Text debugMaxNodes;
     Text debugDArray;
     Text debugBounds;
@@ -47,7 +49,9 @@ public class UIManager : MonoBehaviour
         debugtotalProcessingTime = debugTexts[5];
         debugMaxNodes = debugTexts[6];
         debugWalkable = debugTexts[7];
-        debugDArray = debugTexts[8];
+        debugopenListSize = debugTexts[8];
+        debugclosedListSize = debugTexts[9];
+        debugDArray = debugTexts[10];
         useGoal = manager.useGoalBound;
         currentX = -2;
         currentY = -2;
@@ -109,6 +113,8 @@ public class UIManager : MonoBehaviour
                 debugMaxNodes.text = "MaxOpenNodes:" + manager.pathfinding.MaxOpenNodes;
                 debugtotalProcessedNodes.text = "TotalPNodes:" + manager.pathfinding.TotalProcessedNodes;
                 debugtotalProcessingTime.text = "TotalPTime:" + manager.pathfinding.TotalProcessingTime;
-            }
+                debugopenListSize.text = "OpenListSize:" + manager.pathfinding.Open.CountOpen();
+                debugclosedListSize.text = "ClosedListSize:" + manager.pathfinding.Closed.CountClosed();
+        }
         }
 }

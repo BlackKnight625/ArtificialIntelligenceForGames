@@ -10,5 +10,6 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
         //should return null if the node is not found
         NodeRecord SearchInClosed(NodeRecord nodeRecord);
         ICollection<NodeRecord> All();
+        int CountClosed();
     }
 }

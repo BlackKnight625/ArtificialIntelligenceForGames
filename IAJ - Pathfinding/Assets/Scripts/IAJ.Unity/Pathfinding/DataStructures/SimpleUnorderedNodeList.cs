@@ -24,6 +24,11 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
             return this.NodeRecords.Count;
         }
 
+        public int CountClosed()
+        {
+            return this.NodeRecords.Count;
+        }
+
         public void AddToClosed(NodeRecord nodeRecord)
         {
             this.NodeRecords.Add(nodeRecord);
