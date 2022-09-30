@@ -251,11 +251,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
         }
 
         public void Reset() {
-            // Resetting all nodes that have been tampered with
-            foreach(NodeRecord record in Closed.All()) {
-                record.Reset();
-            }
-            foreach(NodeRecord record in Open.All()) {
+            foreach(NodeRecord record in grid.getAll()) {
                 record.Reset();
             }
         }

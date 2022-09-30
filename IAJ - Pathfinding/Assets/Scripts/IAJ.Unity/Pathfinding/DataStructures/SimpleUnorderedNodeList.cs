@@ -37,6 +37,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
 
         public void RemoveFromClosed(NodeRecord nodeRecord)
         {
+            nodeRecord.status = NodeStatus.Unvisited;
             this.NodeRecords.Remove(nodeRecord);
         }
 
@@ -56,6 +57,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
 
         public void RemoveFromOpen(NodeRecord nodeRecord)
         {
+            nodeRecord.status = NodeStatus.Unvisited;
             this.NodeRecords.Remove(nodeRecord);
         }
 
