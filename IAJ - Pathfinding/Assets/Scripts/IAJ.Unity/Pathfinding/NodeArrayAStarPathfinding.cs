@@ -11,7 +11,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
     {
         protected NodeRecordArray NodeRecordArray { get; set; }
 
-        public NodeArrayAStarPathfinding(IHeuristic heuristic) : base(null, null, heuristic)
+        public NodeArrayAStarPathfinding(IOpenSet open, IClosedSet closed, IHeuristic heuristic) : base(null, null, heuristic)
         {
             this.InProgress = false;
             this.Heuristic = heuristic;

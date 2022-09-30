@@ -21,6 +21,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
 
         //A* Stuff
         public NodeRecord parent;
+        public NodeRecord direction;
         public float gCost;
         public float hCost;
         public float fCost;
@@ -43,6 +44,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
             hCost = 0;
             fCost = gCost + hCost;
             parent = null;
+            direction = null;
             index = 0;
             isWalkable = true;
             status = NodeStatus.Unvisited;
@@ -80,6 +82,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
             hCost = 0;
             fCost = gCost + hCost;
             parent = null;
+            direction = null;
             status = NodeStatus.Unvisited;
         }
 

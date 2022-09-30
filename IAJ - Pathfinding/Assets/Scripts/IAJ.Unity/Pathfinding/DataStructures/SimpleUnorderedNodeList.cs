@@ -31,6 +31,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
 
         public void AddToClosed(NodeRecord nodeRecord)
         {
+            nodeRecord.status = NodeStatus.Closed;
             this.NodeRecords.Add(nodeRecord);
         }
 
@@ -49,6 +50,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
 
         public void AddToOpen(NodeRecord nodeRecord)
         {
+            nodeRecord.status = NodeStatus.Open;
             this.NodeRecords.Add(nodeRecord);
         }
 

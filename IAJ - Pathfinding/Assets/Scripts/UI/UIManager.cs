@@ -48,9 +48,9 @@ public class UIManager : MonoBehaviour
         debugtotalProcessedNodes = debugTexts[4];
         debugtotalProcessingTime = debugTexts[5];
         debugMaxNodes = debugTexts[6];
-        debugWalkable = debugTexts[7];
-        debugopenListSize = debugTexts[8];
-        debugclosedListSize = debugTexts[9];
+        debugopenListSize = debugTexts[7];
+        debugclosedListSize = debugTexts[8];
+        debugWalkable = debugTexts[9];
         debugDArray = debugTexts[10];
         useGoal = manager.useGoalBound;
         currentX = -2;

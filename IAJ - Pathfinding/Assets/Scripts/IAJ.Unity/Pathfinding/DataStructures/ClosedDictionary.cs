@@ -31,6 +31,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
 
         public void AddToClosed(NodeRecord nodeRecord)
         {
+            nodeRecord.status = NodeStatus.Closed;
             Closed.Add(GetKey(nodeRecord), nodeRecord);
         }
 

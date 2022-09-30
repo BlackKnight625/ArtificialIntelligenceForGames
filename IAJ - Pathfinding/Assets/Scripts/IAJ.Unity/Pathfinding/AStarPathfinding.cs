@@ -55,7 +55,6 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
 
             //if it is not possible to quantize the positions and find the corresponding nodes, then we cannot proceed
             if (this.StartNode == null || this.GoalNode == null) return;
-
             // Reset debug and relevat variables here
             this.InProgress = true;
             this.TotalProcessedNodes = 0;
@@ -147,7 +146,10 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                 childNode.hCost = Heuristic.H(childNode, GoalNode);
                 Open.AddToOpen(childNode);
             }
+
+            childNode.direction = parentNode.direction;
             
+            if (childNode.direction == null) childNode.direction = childNode;
             childNode.CalculateFCost();
             
             // Letting the Event Handler know that this node's state possibly changed, so that its color may be updated
@@ -155,7 +157,11 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
 
             MaxOpenNodes = Math.Max(MaxOpenNodes, Open.CountOpen());
         }
-
+        
+        public virtual bool InsindeGoalBoundBox(int startX, int startY, int x, int y, string direction)
+        {
+            return false;
+        }
 
         protected float CalculateDistanceCost(NodeRecord a, NodeRecord b)
         {
@@ -181,7 +187,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
         }
 
         // You'll need to use this method during the Search, to get the neighboors
-        protected List<NodeRecord> GetNeighbourList(NodeRecord currentNode)
+        protected virtual List<NodeRecord> GetNeighbourList(NodeRecord currentNode)
         {
             List<NodeRecord> neighbourList = new List<NodeRecord>();
 
