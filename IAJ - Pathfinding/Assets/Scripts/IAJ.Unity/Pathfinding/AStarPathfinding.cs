@@ -147,9 +147,6 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                 Open.AddToOpen(childNode);
             }
 
-            childNode.direction = parentNode.direction;
-            
-            if (childNode.direction == null) childNode.direction = childNode;
             childNode.CalculateFCost();
             
             // Letting the Event Handler know that this node's state possibly changed, so that its color may be updated
@@ -158,9 +155,9 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             MaxOpenNodes = Math.Max(MaxOpenNodes, Open.CountOpen());
         }
         
-        public virtual bool InsindeGoalBoundBox(int startX, int startY, int x, int y, string direction)
+        public virtual bool InsindeGoalBoundBox(int startX, int startY, int x, int y, GoalBoundAStarPathfinding.Direction direction)
         {
-            return false;
+            return true;
         }
 
         protected float CalculateDistanceCost(NodeRecord a, NodeRecord b)

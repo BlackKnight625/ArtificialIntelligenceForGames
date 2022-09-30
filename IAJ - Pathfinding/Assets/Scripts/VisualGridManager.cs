@@ -31,7 +31,7 @@ public class VisualGridManager : MonoBehaviour
     [System.Serializable]
     public struct boxColor
     {
-       public string direction;
+       public GoalBoundAStarPathfinding.Direction direction;
        public Color color;
     }
 
@@ -209,8 +209,5 @@ public class VisualGridManager : MonoBehaviour
                             this.SetObjectColor(x, y, c.color);
                 }
             }
-
-
-      
     }
 }

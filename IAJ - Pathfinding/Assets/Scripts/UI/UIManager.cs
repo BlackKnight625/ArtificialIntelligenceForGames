@@ -91,10 +91,10 @@ public class UIManager : MonoBehaviour
                                 if (goalBoundingPathfinder.goalBounds.ContainsKey(new Vector2(x, y)))
                                 {
                                     var boundingBox = goalBoundingPathfinder.goalBounds[new Vector2(x, y)];
-                                    array += "Left" + boundingBox["left"] + "\n";
-                                    array += "Right" + boundingBox["right"] + "\n";
-                                    array += "Up" + boundingBox["up"] + "\n";
-                                    array += "Down" + boundingBox["down"] + "\n";
+                                    array += "Left" + boundingBox[GoalBoundAStarPathfinding.Direction.West] + "\n";
+                                    array += "Right" + boundingBox[GoalBoundAStarPathfinding.Direction.East] + "\n";
+                                    array += "Up" + boundingBox[GoalBoundAStarPathfinding.Direction.North] + "\n";
+                                    array += "Down" + boundingBox[GoalBoundAStarPathfinding.Direction.South] + "\n";
                                     debugDArray.text = array;
                                     visualGrid.fillBoundingBox(node);
 
