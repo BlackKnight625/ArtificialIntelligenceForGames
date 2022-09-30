@@ -204,7 +204,9 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             //NORTH
             if (currentNode.y + 1 < grid.getHeight())
                 neighbourList.Add(GetNode(currentNode.x, currentNode.y + 1));
-
+            
+            neighbourList.RemoveAll(x => !x.isWalkable);
+            
             return neighbourList;
         }
         
@@ -223,7 +225,9 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             //NORTH
             if (currentNode.y + 1 < grid.getHeight())
                 neighbourList.Add((GetNode(currentNode.x, currentNode.y + 1), Direction.North));
-
+            
+            neighbourList.RemoveAll(x => !x.Item1.isWalkable);
+            
             return neighbourList;
         }
         
@@ -255,6 +259,8 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                 if (InsindeGoalBoundBox(currentNode.x, currentNode.y, GoalNode.x, GoalNode.y, Direction.North))
                     neighbourList.Add(GetNode(currentNode.x, currentNode.y + 1));
             }
+            
+            neighbourList.RemoveAll(x => !x.isWalkable);
             
             return neighbourList;
         }
