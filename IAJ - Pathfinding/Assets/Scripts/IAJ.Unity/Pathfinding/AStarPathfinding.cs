@@ -14,7 +14,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
     {
         // Cost of moving through the grid
         protected const float MOVE_STRAIGHT_COST = 1;
-        protected const float MOVE_DIAGONAL_COST = 1.5f;
+        protected const float MOVE_DIAGONAL_COST = 1.4f;
         public Grid<NodeRecord> grid { get; set; }
         public uint NodesPerSearch { get; set; }
         public uint TotalProcessedNodes { get; protected set; }
@@ -44,6 +44,8 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
         }
         public virtual void InitializePathfindingSearch(int startX, int startY, int goalX, int goalY)
         {
+            Reset();
+            
             this.StartPositionX = startX;
             this.StartPositionY = startY;
             this.GoalPositionX = goalX;
@@ -60,17 +62,13 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             this.TotalProcessingTime = 0.0f;
             this.MaxOpenNodes = 0;
 
-            //Starting with the first node
-            var initialNode = new NodeRecord(StartNode.x, StartNode.y)
-            {
-                gCost = 0,
-                hCost = this.Heuristic.H(this.StartNode, this.GoalNode),
-                index = StartNode.index
-            };
+            // Instead of creating a copy of the StartNode, we chose to use the already existing one
+            StartNode.gCost = 0;
+            StartNode.hCost = this.Heuristic.H(this.StartNode, this.GoalNode);
 
-            initialNode.CalculateFCost();
+            StartNode.CalculateFCost();
             this.Open.Initialize();
-            this.Open.AddToOpen(initialNode);
+            this.Open.AddToOpen(StartNode);
             this.Closed.Initialize();
         }
         public virtual bool Search(out List<NodeRecord> solution, bool returnPartialSolution = false) {
@@ -104,9 +102,11 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                     return true;
                 }
                 
-                Closed.AddToClosed(CurrentNode);
                 Open.RemoveFromOpen(CurrentNode);
-                updateNodeStatus(CurrentNode, NodeStatus.Closed);
+                Closed.AddToClosed(CurrentNode);
+                
+                // Changing the color of the node
+                grid.SetGridObject(CurrentNode.x, CurrentNode.y, CurrentNode);
 
                 foreach (var adjacent in GetNeighbourList(CurrentNode)) {
                     ProcessChildNode(CurrentNode, adjacent);
@@ -120,11 +120,6 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             solution = null;
             return false;
         
-    }
-        protected void updateNodeStatus(NodeRecord node, NodeStatus status)
-        {
-            node.status = status;
-            grid.SetGridObject(node.x, node.y, node);
         }
 
         protected virtual void ProcessChildNode(NodeRecord parentNode, NodeRecord childNode) {
@@ -154,7 +149,9 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             }
             
             childNode.CalculateFCost();
-            updateNodeStatus(childNode, NodeStatus.Open);
+            
+            // Letting the Event Handler know that this node's state possibly changed, so that its color may be updated
+            grid.SetGridObject(childNode.x, childNode.y, childNode);
 
             MaxOpenNodes = Math.Max(MaxOpenNodes, Open.CountOpen());
         }
@@ -243,8 +240,18 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             }
 
             path.Reverse();
+            
             return path;
         }
 
+        public void Reset() {
+            // Resetting all nodes that have been tampered with
+            foreach(NodeRecord record in Closed.All()) {
+                record.Reset();
+            }
+            foreach(NodeRecord record in Open.All()) {
+                record.Reset();
+            }
+        }
     }
 }

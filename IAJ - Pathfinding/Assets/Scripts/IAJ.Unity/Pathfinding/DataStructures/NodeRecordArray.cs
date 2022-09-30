@@ -6,42 +6,22 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
 {
     public class NodeRecordArray : IOpenSet, IClosedSet
     {
-        private NodeRecord[] NodeRecords { get; set; }
         private NodePriorityHeap Open { get; set; }
+        private int closedCount = 0;
+        private List<NodeRecord> nodes;
 
-        public NodeRecordArray(List<NodeRecord> nodes)
-        {
-            //this method creates and initializes the NodeRecordArray for all nodes in the Navigation Graph
-            this.NodeRecords = new NodeRecord[nodes.Count];
-            
-            for(int i = 0; i < nodes.Count; i++)
-            {
-                this.NodeRecords[i] = new NodeRecord(nodes[i].x, nodes[i].y) {index = i };
-            }
-
+        public NodeRecordArray(List<NodeRecord> nodes) {
+            this.nodes = nodes;
             this.Open = new NodePriorityHeap();
-        }
-
-        public NodeRecord GetNodeRecord(NodeRecord node)
-        {
-            return NodeRecords[node.index];
         }
 
         void IOpenSet.Initialize()
         {
             this.Open.Initialize();
-            //we want this to be very efficient (that's why we use for)
-            for (int i = 0; i < this.NodeRecords.Length; i++)
-            {
-                if(NodeRecords[i].isWalkable)
-                this.NodeRecords[i].status = NodeStatus.Unvisited;
-            }
-
         }
 
-        void IClosedSet.Initialize()
-        {
-        
+        void IClosedSet.Initialize() {
+            closedCount = 0;
         }
 
         public void AddToOpen(NodeRecord nodeRecord)
@@ -50,22 +30,24 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
             nodeRecord.status = NodeStatus.Open;
         }
 
-        public void AddToClosed(NodeRecord nodeRecord)
-        {
-            // TODO implement
-            throw new NotImplementedException();
+        public void AddToClosed(NodeRecord nodeRecord) {
+            nodeRecord.status = NodeStatus.Closed;
+
+            closedCount++;
         }
 
-        public NodeRecord SearchInOpen(NodeRecord nodeRecord)
-        {
-            //TODO implement
-            throw new NotImplementedException();
+        public NodeRecord SearchInOpen(NodeRecord nodeRecord) {
+            return Open.SearchInOpen(nodeRecord);
         }
 
         public NodeRecord SearchInClosed(NodeRecord nodeRecord)
         {
-            //TODO implement
-            throw new NotImplementedException();
+            if (nodeRecord.status == NodeStatus.Closed) {
+                return nodeRecord;
+            }
+            else {
+                return null;
+            }
         }
 
         public NodeRecord GetBestAndRemove()
@@ -89,25 +71,29 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
             nodeRecord.status = NodeStatus.Unvisited;
         }
 
-        public void RemoveFromClosed(NodeRecord nodeRecord)
-        {
-            //TODO implement
-            throw new NotImplementedException();
+        public void RemoveFromClosed(NodeRecord nodeRecord) {
+            nodeRecord.status = NodeStatus.Unvisited;
+
+            closedCount--;
         }
 
         ICollection<NodeRecord> IOpenSet.All()
         {
             return this.Open.All();
         }
-
+        
         ICollection<NodeRecord> IClosedSet.All()
         {
-            return this.NodeRecords.Where(node => node.status == NodeStatus.Closed).ToList();
+            return nodes.Where(node => node.status == NodeStatus.Closed).ToList();
         }
 
         public int CountOpen()
         {
             return this.Open.CountOpen();
+        }
+
+        public int CountClosed() {
+            return closedCount;
         }
     }
 }
