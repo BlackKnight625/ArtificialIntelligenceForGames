@@ -86,5 +86,8 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures
             status = NodeStatus.Unvisited;
         }
 
+        public override int GetHashCode() {
+            return x * 5001 + y;
+        }
     }
 }

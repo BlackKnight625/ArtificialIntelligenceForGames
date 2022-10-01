@@ -41,7 +41,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                 for (int j = 0; j < grid.getWidth(); j++)
                 {
                     NodeRecord node = grid.GetGridObject(j, i);
-                    if (grid.GetGridObject(node.x, node.y).isWalkable)
+                    if (node.isWalkable)
                     {
                         Vector2 coords = new Vector2(node.x, node.y);
                         goalBounds.Add(coords, new Dictionary<Direction, Vector4>());
@@ -55,18 +55,18 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                             if (north.isWalkable)
                                 goalBounds[coords].Add(Direction.North, boundsCalculator(north));
 
-                            if (j + 1 < grid.getWidth()) {
+                            if (j - 1 >= 0) {
                                 //NORTH WEST
                                 
-                                NodeRecord northWest = grid.GetGridObject(j + 1, i + 1);
+                                NodeRecord northWest = grid.GetGridObject(j - 1, i + 1);
                                 if (northWest.isWalkable)
                                     goalBounds[coords].Add(Direction.NorthWest, boundsCalculator(northWest));
                             }
                             
-                            if (j - 1 >= 0) {
+                            if (j + 1 < grid.getWidth()) {
                                 //NORTH EAST
                                 
-                                NodeRecord northEast = grid.GetGridObject(j - 1, i + 1);
+                                NodeRecord northEast = grid.GetGridObject(j + 1, i + 1);
                                 if (northEast.isWalkable)
                                     goalBounds[coords].Add(Direction.NorthEast, boundsCalculator(northEast));
                             }
@@ -79,18 +79,18 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                             if (south.isWalkable)
                                 goalBounds[coords].Add(Direction.South, boundsCalculator(south));
                             
-                            if (j + 1 < grid.getWidth()) {
+                            if (j - 1 >= 0) {
                                 //SOUTH WEST
                                 
-                                NodeRecord southWest = grid.GetGridObject(j + 1, i - 1);
+                                NodeRecord southWest = grid.GetGridObject(j - 1, i - 1);
                                 if (southWest.isWalkable)
                                     goalBounds[coords].Add(Direction.SouthWest, boundsCalculator(southWest));
                             }
                             
-                            if (j - 1 >= 0) {
+                            if (j + 1 < grid.getWidth()) {
                                 //SOUTH EAST
                                 
-                                NodeRecord southEast = grid.GetGridObject(j - 1, i - 1);
+                                NodeRecord southEast = grid.GetGridObject(j + 1, i - 1);
                                 if (southEast.isWalkable)
                                     goalBounds[coords].Add(Direction.SouthEast, boundsCalculator(southEast));
                             }
@@ -148,6 +148,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
 
                     pair.Item1.gCost = CalculateDistanceCost(original, pair.Item1);
                     pair.Item1.parent = original;
+                    pair.Item1.CalculateFCost(); // Sets fCost = gCost
                 
                     Open.AddToOpen(pair.Item1);
                 }
@@ -183,10 +184,12 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             var distance = parentNode.gCost + CalculateDistanceCost(parentNode, childNode);
 
             if (childNode.Equals(Open.SearchInOpen(childNode))) {
-                if (distance < parentNode.gCost) {
+                if (distance < childNode.gCost) {
                     childNode.gCost = distance;
                     childNode.parent = parentNode;
                     childNode.direction = parentNode.direction;
+                    
+                    childNode.CalculateFCost(); // Sets fCost = gCost
                 }
             }
             else if(!childNode.Equals(Closed.SearchInClosed(childNode))) {
@@ -195,6 +198,8 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                 childNode.gCost = distance;
                 childNode.parent = parentNode;
                 childNode.direction = parentNode.direction;
+                
+                childNode.CalculateFCost(); // Sets fCost = gCost
                 
                 Open.AddToOpen(childNode);
             }
@@ -239,11 +244,11 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             if (currentNode.y - 1 >= 0) {
                 neighbourList.Add((GetNode(currentNode.x, currentNode.y - 1), Direction.South));
 
-                if (currentNode.x + 1 < grid.getWidth()) {
-                    neighbourList.Add((GetNode(currentNode.x + 1, currentNode.y - 1), Direction.SouthWest));
-                }
                 if (currentNode.x - 1 >= 0) {
-                    neighbourList.Add((GetNode(currentNode.x - 1, currentNode.y - 1), Direction.SouthEast));
+                    neighbourList.Add((GetNode(currentNode.x - 1, currentNode.y - 1), Direction.SouthWest));
+                }
+                if (currentNode.x + 1 < grid.getWidth()) {
+                    neighbourList.Add((GetNode(currentNode.x + 1, currentNode.y - 1), Direction.SouthEast));
                 }
             }
                 
@@ -251,11 +256,11 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             if (currentNode.y + 1 < grid.getHeight()) {
                 neighbourList.Add((GetNode(currentNode.x, currentNode.y + 1), Direction.North));
                 
-                if (currentNode.x + 1 < grid.getWidth()) {
-                    neighbourList.Add((GetNode(currentNode.x + 1, currentNode.y + 1), Direction.NorthWest));
-                }
                 if (currentNode.x - 1 >= 0) {
-                    neighbourList.Add((GetNode(currentNode.x - 1, currentNode.y + 1), Direction.NorthEast));
+                    neighbourList.Add((GetNode(currentNode.x - 1, currentNode.y + 1), Direction.NorthWest));
+                }
+                if (currentNode.x + 1 < grid.getWidth()) {
+                    neighbourList.Add((GetNode(currentNode.x + 1, currentNode.y + 1), Direction.NorthEast));
                 }
             }
             
@@ -289,7 +294,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                 // SOUTH EAST
                 if (currentNode.x + 1 < grid.getWidth()) {
                     if (InsindeGoalBoundBox(currentNode.x, currentNode.y, GoalNode.x, GoalNode.y, Direction.SouthEast))
-                        neighbourList.Add(GetNode(currentNode.x - 1, currentNode.y - 1));
+                        neighbourList.Add(GetNode(currentNode.x + 1, currentNode.y - 1));
                 }
                 
                 // SOUTH WEST
@@ -307,13 +312,13 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
                 // NORTH EAST
                 if (currentNode.x + 1 < grid.getWidth()) {
                     if (InsindeGoalBoundBox(currentNode.x, currentNode.y, GoalNode.x, GoalNode.y, Direction.NorthEast))
-                        neighbourList.Add(GetNode(currentNode.x - 1, currentNode.y - 1));
+                        neighbourList.Add(GetNode(currentNode.x + 1, currentNode.y + 1));
                 }
                 
                 // NORTH WEST
                 if (currentNode.x - 1 >= 0) {
                     if (InsindeGoalBoundBox(currentNode.x, currentNode.y, GoalNode.x, GoalNode.y, Direction.NorthWest))
-                        neighbourList.Add(GetNode(currentNode.x - 1, currentNode.y - 1));
+                        neighbourList.Add(GetNode(currentNode.x - 1, currentNode.y + 1));
                 }
             }
             

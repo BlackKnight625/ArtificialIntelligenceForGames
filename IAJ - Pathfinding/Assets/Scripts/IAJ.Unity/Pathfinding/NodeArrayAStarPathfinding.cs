@@ -15,7 +15,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
         {
             this.InProgress = false;
             this.Heuristic = heuristic;
-            this.NodesPerSearch = 100;
+            this.NodesPerSearch = 5;
             this.NodeRecordArray = new NodeRecordArray(grid.getAll());
             this.Open = this.NodeRecordArray;
             this.Closed = this.NodeRecordArray;
