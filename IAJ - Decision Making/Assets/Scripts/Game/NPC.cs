@@ -70,7 +70,8 @@ namespace Assets.Scripts.Game
             var distance = 0.0f;
 
             NavMeshPath result = new NavMeshPath();
-            var r = navMeshAgent.CalculatePath(targetPosition, result);
+            var r = NavMesh.CalculatePath(originalPosition, targetPosition, NavMesh.AllAreas, result);
+            //var r = navMeshAgent.CalculatePath(targetPosition, result);
             if (r == true)
             {
                 var currentPosition = originalPosition;
