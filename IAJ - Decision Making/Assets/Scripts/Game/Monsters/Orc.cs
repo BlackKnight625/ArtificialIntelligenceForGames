@@ -11,8 +11,11 @@ using System.Collections.Generic;
 namespace Assets.Scripts.Game.NPCs
 {
 
-    public class Orc : Monster
-    {
+    public class Orc : Monster {
+
+        public GameObject patrol1;
+        public GameObject patrol2;
+        
         public Orc()
         {
             this.enemyStats.Type = "Orc";
@@ -28,7 +31,7 @@ namespace Assets.Scripts.Game.NPCs
 
         public override void InitializeBehaviourTree()
         {
-            this.BehaviourTree = new BasicTree(this, this.Target);
+            this.BehaviourTree = new OrcTree(this, this.Target, patrol1, patrol2);
         }
     }
 }

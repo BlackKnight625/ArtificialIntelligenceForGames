@@ -4,17 +4,17 @@ using Assets.Scripts.IAJ.Unity.DecisionMaking.BehaviorTree.EnemyTasks;
 using UnityEngine;
 
 namespace Assets.Scripts.IAJ.Unity.DecisionMaking.BehaviorTree.BehaviourTrees {
-    class OrcTree : Sequence {
-        public OrcTree(Monster character, GameObject target)
-        {
-            // To create a new tree you need to create each branck which is done using the constructors of different tasks
-            // Additionally it is possible to create more complex behaviour by combining different tasks and composite tasks...
-            this.children = new List<Task>()
-            {
-                new IsCharacterNearTarget(character, target, character.enemyStats.AwakeDistance),
-                new MoveTo(character, target, character.enemyStats.WeaponRange),
-                new LightAttack(character)
-            };
-        }
+    class OrcTree : Selector {
+        public OrcTree(Monster character, GameObject target, GameObject patrol1, GameObject patrol2) : base(
+            new List<Task>() {
+                new Sequence(new List<Task>() {
+                    new IsCharacterNearTarget(character, target, character.enemyStats.AwakeDistance),
+                    new MoveToTargetWhileClose(character, target, character.enemyStats.WeaponRange, character.enemyStats.AwakeDistance),
+                    new LightAttack(character)
+                }),
+                new MoveToPatrolAndCheckTarget(character, target,
+                    character.enemyStats.AwakeDistance, patrol1, patrol2, character.enemyStats.WeaponRange)
+            }
+        ) { }
     }
 }
