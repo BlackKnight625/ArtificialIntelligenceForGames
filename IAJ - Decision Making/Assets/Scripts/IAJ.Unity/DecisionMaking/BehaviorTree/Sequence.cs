@@ -10,8 +10,12 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.BehaviorTree
     public class Sequence : CompositeTask
     {
      
-        public Sequence(List<Task> tasks) : base(tasks)
-        {
+        public Sequence(List<Task> tasks) : base(tasks) {
+            
+        }
+        
+        public Sequence(params Task[] tasks) : base(tasks) {
+            
         }
 
         public Sequence() { }

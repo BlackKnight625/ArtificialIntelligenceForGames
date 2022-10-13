@@ -19,6 +19,10 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.BehaviorTree
             this.children = tasks;
         }
 
+        public CompositeTask(params Task[] tasks) : this(new List<Task>(tasks)) {
+            
+        }
+
         public CompositeTask() { }
 
 

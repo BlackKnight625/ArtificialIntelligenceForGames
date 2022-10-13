@@ -9,8 +9,12 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.BehaviorTree
     public class Selector : CompositeTask
     {
    
-        public Selector(List<Task> tasks) : base(tasks)
-        {
+        public Selector(List<Task> tasks) : base(tasks) {
+            
+        }
+
+        public Selector(params Task[] tasks) : base(tasks) {
+            
         }
 
         // A Selector will return immediately with a success status code when one of its children
