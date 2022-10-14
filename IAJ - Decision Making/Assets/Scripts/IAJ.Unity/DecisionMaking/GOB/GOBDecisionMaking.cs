@@ -45,11 +45,22 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.GOB
         {
             // Find the action leading to the lowest discontentment
             InProgress = true;
-            Action bestAction = null;
+            Action bestAction = actions[0];
             var bestValue = float.PositiveInfinity;
-
-            //TODO Implement
-
+            //var bestValue = CalculateDiscontentment(actions[0], goals);
+            
+            foreach(Action action in actions) {
+                if (action.CanExecute())
+                {
+                    float value = CalculateDiscontentment(action, goals);
+                    if (value < bestValue)
+                    {
+                        bestValue = value;
+                        bestAction = action;
+                    }
+                }
+            }
+            
             InProgress = false;
             return bestAction;
         }
