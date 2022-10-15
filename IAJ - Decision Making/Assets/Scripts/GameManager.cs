@@ -196,6 +196,28 @@ public class GameManager : MonoBehaviour
             this.WorldChanged = true;
         }
     }
+    
+    public void DivineSmite(GameObject enemy)
+    {
+        int damage = 0;
+
+        Monster.EnemyStats enemyData = enemy.GetComponent<Monster>().enemyStats;
+
+        if (enemy != null && enemy.activeSelf && InMeleeRange(enemy))
+        {
+            this.Character.AddToDiary(" I Sword Attacked " + enemy.name);
+            
+            this.enemies.Remove(enemy);
+            this.disposableObjects[enemy.name].Remove(enemy);
+            enemy.SetActive(false);
+            Object.Destroy(enemy);
+
+            this.Character.baseStats.XP += enemyData.XPvalue;
+            this.Character.baseStats.Mana -= 2;
+
+            this.WorldChanged = true;
+        }
+    }
 
     public void EnemyAttack(GameObject enemy)
     {
@@ -206,7 +228,7 @@ public class GameManager : MonoBehaviour
 
             Monster monster = enemy.GetComponent<Monster>();
 
-            if (enemy != null && enemy.activeSelf && InMeleeRange(enemy))
+            if (enemy != null && enemy.activeSelf)
             {
 
                 this.Character.AddToDiary(" I was Attacked by " + enemy.name);
@@ -279,6 +301,25 @@ public class GameManager : MonoBehaviour
             this.Character.baseStats.HP = this.Character.baseStats.MaxHP;
             this.WorldChanged = true;
         }
+    }
+    
+    public void GetManaPotion(GameObject potion)
+    {
+        if (potion != null && potion.activeSelf && InPotionRange(potion))
+        {
+            this.Character.AddToDiary(" I drank " + potion.name);
+            this.disposableObjects[potion.name].Remove(potion);
+            Object.Destroy(potion);
+            this.Character.baseStats.Mana = 10;
+            this.WorldChanged = true;
+        }
+    }
+    
+    public void ShieldOfFaith()
+    {
+        this.Character.baseStats.ShieldHP = 5;
+        this.Character.baseStats.Mana -= 5;
+        this.WorldChanged = true;
     }
 
     public void LevelUp()

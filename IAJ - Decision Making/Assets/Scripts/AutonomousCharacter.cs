@@ -125,6 +125,8 @@ public class AutonomousCharacter : NPC
         this.Actions = new List<Action>();
 
         this.Actions.Add(new LevelUp(this));
+        
+        this.Actions.Add(new ShieldOfFaith(this));
 
 
         foreach (var chest in GameObject.FindGameObjectsWithTag("Chest"))
@@ -134,7 +136,7 @@ public class AutonomousCharacter : NPC
 
         foreach (var potion in GameObject.FindGameObjectsWithTag("ManaPotion"))
         {
-          // Todo...
+            this.Actions.Add(new GetManaPotion(this, potion));
         }
 
         foreach (var potion in GameObject.FindGameObjectsWithTag("HealthPotion"))
@@ -145,6 +147,7 @@ public class AutonomousCharacter : NPC
         foreach (var enemy in GameObject.FindGameObjectsWithTag("Skeleton"))
         {
             this.Actions.Add(new SwordAttack(this, enemy));
+            this.Actions.Add(new DivineSmite(this, enemy));
         }
 
         foreach (var enemy in GameObject.FindGameObjectsWithTag("Orc"))
@@ -231,8 +234,6 @@ public class AutonomousCharacter : NPC
                 {
                     //Simple way of checking which object is closest to Sir Uthgard
                     var s = playerText.text.ToString();
-                    if (s.Contains("Potion"))
-                        PickUpPotion(s);
                     if (s.Contains("Potion"))
                         PickUpPotion(s);
                     else if (s.Contains("Chest"))

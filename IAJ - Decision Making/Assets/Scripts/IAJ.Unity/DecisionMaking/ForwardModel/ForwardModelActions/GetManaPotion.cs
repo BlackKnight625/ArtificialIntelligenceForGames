@@ -4,30 +4,30 @@ using UnityEngine;
 
 namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActions
 {
-    public class GetHealthPotion : WalkToTargetAndExecuteAction
+    public class GetManaPotion : WalkToTargetAndExecuteAction
     {
-        public GetHealthPotion(AutonomousCharacter character, GameObject target) : base("GetHealthPotion",character,target)
+        public GetManaPotion(AutonomousCharacter character, GameObject target) : base("GetManaPotion",character,target)
         {
         }
-
+        
         public override bool CanExecute()
         {
             if (!base.CanExecute()) return false;
-            return Character.baseStats.HP < Character.baseStats.MaxHP;
+            return Character.baseStats.Mana < 10;
         }
-
+        
         public override bool CanExecute(WorldModel worldModel)
         {
-            //TODO implement
-            return false;
+            if (!base.CanExecute()) return false;
+            return (int) worldModel.GetProperty(Properties.MANA) < 10;
         }
-
+        
         public override void Execute()
         {
             base.Execute();
-            GameManager.Instance.GetHealthPotion(this.Target);
+            GameManager.Instance.GetManaPotion(this.Target);
         }
-
+        
         public override float GetGoalChange(Goal goal)
         {
             var change = base.GetGoalChange(goal);
@@ -39,22 +39,20 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
 
             return change;
         }
-
+        
         public override void ApplyActionEffects(WorldModel worldModel)
         {
             base.ApplyActionEffects(worldModel);
-            int health = (int) worldModel.GetProperty(Properties.HP);
-            int gainedHealth = (int) GetHValue(worldModel);
-            worldModel.SetProperty(Properties.HP, (int)(health + gainedHealth));
-
+            int mana = (int) worldModel.GetProperty(Properties.MANA);
+            int gainedMana = (int) GetHValue(worldModel);
+            worldModel.SetProperty(Properties.MANA, (int)(mana + gainedMana));
             //disables the target object so that it can't be reused again
             worldModel.SetProperty(this.Target.name, false);
         }
-
+        
         public override float GetHValue(WorldModel worldModel)
         {
-            //TODO implement
-            return 0.0f;
+            return 10 - (int) worldModel.GetProperty(Properties.MANA);
         }
     }
 }
