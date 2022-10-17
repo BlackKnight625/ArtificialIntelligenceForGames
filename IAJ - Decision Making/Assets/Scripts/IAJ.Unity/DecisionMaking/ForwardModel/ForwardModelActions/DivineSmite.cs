@@ -121,7 +121,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
             //attack roll = D20 + attack modifier. Using 7 as attack modifier (+4 str modifier, +3 proficiency bonus)
             int attackRoll = RandomHelper.RollD20() + 7;
 
-            if (attackRoll >= enemyAC || GameManager.Instance.StochasticWorld)
+            if (attackRoll >= enemyAC || !GameManager.Instance.StochasticWorld)
             {
                 //there was an hit, enemy is destroyed, gain xp
                 //disables the target object so that it can't be reused again

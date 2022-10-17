@@ -43,5 +43,17 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
                 worldModel.GetGoalValue(AutonomousCharacter.SURVIVE_GOAL) +
                 (int) worldModel.GetProperty(Properties.ShieldHP) - 5);
         }
+        
+        public override float GetGoalChange(Goal goal)
+        {
+            var change = base.GetGoalChange(goal);
+
+            if (goal.Name == AutonomousCharacter.SURVIVE_GOAL)
+            {
+                change += GameManager.Instance.Character.baseStats.ShieldHP - 5;
+            }
+
+            return change;
+        }
     }
 }

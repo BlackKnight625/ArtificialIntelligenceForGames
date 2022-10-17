@@ -63,6 +63,22 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
             return change;
         }
 
+        public override bool CanExecute()
+        {
+            if (!base.CanExecute()) return false;
+            if (Character.GetDistanceToTarget(Character.transform.position,
+                    Target.transform.position) > 4) return false;
+            return true;
+        }
+
+        public override bool CanExecute(WorldModel worldModel)
+        {
+            if (!base.CanExecute(worldModel)) return false;
+            if (Character.GetDistanceToTarget((Vector3)worldModel.GetProperty(Properties.POSITION),
+                    Target.transform.position) > 4) return false;
+            return true;
+        }
+        
         public override void Execute()
         {
             base.Execute();
@@ -107,7 +123,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
             //attack roll = D20 + attack modifier. Using 7 as attack modifier (+4 str modifier, +3 proficiency bonus)
             int attackRoll = RandomHelper.RollD20() + 7;
 
-            if (attackRoll >= enemyAC || GameManager.Instance.StochasticWorld)
+            if (attackRoll >= enemyAC || !GameManager.Instance.StochasticWorld)
             {
                 //there was an hit, enemy is destroyed, gain xp
                 //disables the target object so that it can't be reused again

@@ -18,8 +18,8 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
 
         public override bool CanExecute(WorldModel worldModel)
         {
-            //TODO implement
-            return false;
+            if (!base.CanExecute(worldModel)) return false;
+            return (int)(worldModel.GetProperty(Properties.HP)) < (int)(worldModel.GetProperty(Properties.MAXHP));
         }
 
         public override void Execute()

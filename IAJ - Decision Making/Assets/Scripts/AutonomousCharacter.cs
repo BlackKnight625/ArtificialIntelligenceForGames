@@ -97,12 +97,12 @@ public class AutonomousCharacter : NPC
 
         this.SurviveGoal = new Goal(SURVIVE_GOAL, 1.0f);
 
-        this.GainLevelGoal = new Goal(GAIN_LEVEL_GOAL, 1.0f)
+        this.GainLevelGoal = new Goal(GAIN_LEVEL_GOAL, 3.0f)
         {
             ChangeRate = 0.1f
         };
 
-        this.GetRichGoal = new Goal(GET_RICH_GOAL, 5.0f)
+        this.GetRichGoal = new Goal(GET_RICH_GOAL, 0.5f)
         {
             InsistenceValue = 5.0f,
             ChangeRate = 0.5f
@@ -394,7 +394,7 @@ public class AutonomousCharacter : NPC
                 playerText.text = "Pickup Chest";
                 closestObject = col.gameObject;
             }
-            else if (col.gameObject.tag.ToString().Contains("Orc") || col.gameObject.tag.ToString().Contains("Skeleton"))
+            else if (col.gameObject.tag.ToString().Contains("Orc") || col.gameObject.tag.ToString().Contains("Skeleton") || col.gameObject.tag.ToString().Contains("Dragon"))
             {
                 playerText.text = "Attack Enemy";
                 closestObject = col.gameObject;
