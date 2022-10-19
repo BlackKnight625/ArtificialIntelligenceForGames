@@ -23,6 +23,8 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
         public int CurrentIterations { get; set; }
         public int CurrentIterationsInFrame { get; set; }
         public int CurrentDepth { get; set; }
+        private int playoutDepth { get; set; }
+        private int playoutsNumber { get; set; }
         protected CurrentStateWorldModel CurrentStateWorldModel { get; set; }
         protected MCTSNode InitialNode { get; set; }
         protected System.Random RandomGenerator { get; set; }
@@ -33,7 +35,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
         {
             this.InProgress = false;
             this.CurrentStateWorldModel = currentStateWorldModel;
-            this.MaxIterations = 10;
+            this.MaxIterations = 100;
             this.MaxIterationsProcessedPerFrame = 10;
             this.RandomGenerator = new System.Random();
             this.TotalProcessingTime = 0.0f;
@@ -59,6 +61,8 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
             this.InProgress = true;
             this.BestFirstChild = null;
             this.BestActionSequence = new List<Action>();
+            this.playoutDepth = 50;
+            this.playoutsNumber = 25;
         }
 
         public Action Run()
@@ -115,16 +119,23 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
 
         protected virtual Reward Playout(WorldModel initialPlayoutState)
         {
-            WorldModel playoutState = initialPlayoutState.GenerateChildWorldModel();
+            
             int depth = 0;
-            while (!playoutState.IsTerminal() && depth < 50)
+            float totalScore = 0.0f;
+            for (int i = 0; i < this.playoutsNumber; i++)
             {
-                Action[] executableActions = playoutState.GetExecutableActions();
-                executableActions[UnityEngine.Random.Range(0, executableActions.Length)].ApplyActionEffects(playoutState);
-                playoutState.CalculateNextPlayer();
-                depth++;
+                WorldModel playoutState = initialPlayoutState.GenerateChildWorldModel();
+                while (!playoutState.IsTerminal() && depth < this.playoutDepth)
+                {
+                    Action[] executableActions = playoutState.GetExecutableActions();
+                    executableActions[UnityEngine.Random.Range(0, executableActions.Length)].ApplyActionEffects(playoutState);
+                    playoutState.CalculateNextPlayer();
+                    depth++;
+                }
+                totalScore += playoutState.GetScore();
             }
-            return new Reward(playoutState.GetScore(), initialPlayoutState.GetNextPlayer());
+            
+            return new Reward(totalScore/playoutsNumber, initialPlayoutState.GetNextPlayer());
         }
 
         protected virtual void Backpropagate(MCTSNode node, Reward reward)
