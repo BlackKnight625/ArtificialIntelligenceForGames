@@ -97,12 +97,12 @@ public class AutonomousCharacter : NPC
 
         this.SurviveGoal = new Goal(SURVIVE_GOAL, 1.0f);
 
-        this.GainLevelGoal = new Goal(GAIN_LEVEL_GOAL, 1.0f)
+        this.GainLevelGoal = new Goal(GAIN_LEVEL_GOAL, 3.0f)
         {
             ChangeRate = 0.1f
         };
 
-        this.GetRichGoal = new Goal(GET_RICH_GOAL, 5.0f)
+        this.GetRichGoal = new Goal(GET_RICH_GOAL, 0.5f)
         {
             InsistenceValue = 5.0f,
             ChangeRate = 0.5f
@@ -125,6 +125,8 @@ public class AutonomousCharacter : NPC
         this.Actions = new List<Action>();
 
         this.Actions.Add(new LevelUp(this));
+        
+        this.Actions.Add(new ShieldOfFaith(this));
 
 
         foreach (var chest in GameObject.FindGameObjectsWithTag("Chest"))
@@ -134,7 +136,7 @@ public class AutonomousCharacter : NPC
 
         foreach (var potion in GameObject.FindGameObjectsWithTag("ManaPotion"))
         {
-          // Todo...
+            this.Actions.Add(new GetManaPotion(this, potion));
         }
 
         foreach (var potion in GameObject.FindGameObjectsWithTag("HealthPotion"))
@@ -145,6 +147,7 @@ public class AutonomousCharacter : NPC
         foreach (var enemy in GameObject.FindGameObjectsWithTag("Skeleton"))
         {
             this.Actions.Add(new SwordAttack(this, enemy));
+            this.Actions.Add(new DivineSmite(this, enemy));
         }
 
         foreach (var enemy in GameObject.FindGameObjectsWithTag("Orc"))
@@ -231,8 +234,6 @@ public class AutonomousCharacter : NPC
                 {
                     //Simple way of checking which object is closest to Sir Uthgard
                     var s = playerText.text.ToString();
-                    if (s.Contains("Potion"))
-                        PickUpPotion(s);
                     if (s.Contains("Potion"))
                         PickUpPotion(s);
                     else if (s.Contains("Chest"))
@@ -393,7 +394,7 @@ public class AutonomousCharacter : NPC
                 playerText.text = "Pickup Chest";
                 closestObject = col.gameObject;
             }
-            else if (col.gameObject.tag.ToString().Contains("Orc") || col.gameObject.tag.ToString().Contains("Skeleton"))
+            else if (col.gameObject.tag.ToString().Contains("Orc") || col.gameObject.tag.ToString().Contains("Skeleton") || col.gameObject.tag.ToString().Contains("Dragon"))
             {
                 playerText.text = "Attack Enemy";
                 closestObject = col.gameObject;

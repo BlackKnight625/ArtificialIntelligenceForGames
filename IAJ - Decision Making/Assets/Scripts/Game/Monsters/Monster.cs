@@ -91,6 +91,7 @@ namespace Assets.Scripts.Game.NPCs
 
                 Invoke("CheckPlayerPosition", 3.0f);
             }
+            Invoke("CheckPlayerPosition", 2.0f);
         }
 
 

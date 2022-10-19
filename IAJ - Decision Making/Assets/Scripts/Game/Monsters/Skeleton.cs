@@ -21,11 +21,15 @@ namespace Assets.Scripts.Game.NPCs
             this.baseStats.HP = 5;
             this.DmgRoll = () => RandomHelper.RollD6();
             this.enemyStats.SimpleDamage = 2;
-            this.enemyStats.AwakeDistance = 10;
+            this.enemyStats.AwakeDistance = 5;
             this.enemyStats.WeaponRange = 2;
 
         }
-
+        
+        public override void InitializeBehaviourTree()
+        {
+            this.BehaviourTree = new BasicTree(this, this.Target);
+        }
 
     }
 }

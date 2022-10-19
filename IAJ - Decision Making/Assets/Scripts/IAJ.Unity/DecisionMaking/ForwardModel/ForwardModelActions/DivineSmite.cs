@@ -1,12 +1,12 @@
-﻿using Assets.Scripts.Game;
-using Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel;
+﻿using Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel;
 using Assets.Scripts.IAJ.Unity.Utils;
 using System;
+using Assets.Scripts.Game;
 using UnityEngine;
 
 namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActions
 {
-    public class SwordAttack : WalkToTargetAndExecuteAction
+    public class DivineSmite : WalkToTargetAndExecuteAction
     {
         private float expectedHPChange;
         private float expectedXPChange;
@@ -16,34 +16,28 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         //how do you like lambda's in c#?
         private Func<int> dmgRoll;
 
-        public SwordAttack(AutonomousCharacter character, GameObject target) : base("SwordAttack",character,target)
+        private bool isSkeleton = false;
+
+        public DivineSmite(AutonomousCharacter character, GameObject target) : base("DivineSmite",character,target)
         {
             if (target.tag.Equals("Skeleton"))
             {
                 this.dmgRoll = () => RandomHelper.RollD6();
                 this.enemySimpleDamage = 3;
-                this.expectedHPChange = 3.5f;
+                this.expectedHPChange = 0;
                 this.xpChange = 3;
                 this.expectedXPChange = 2.7f;
                 this.enemyAC = 10;
+                isSkeleton = true;
             }
-            else if (target.tag.Equals("Orc"))
+            else
             {
-                this.dmgRoll = () => RandomHelper.RollD10() + 2;
-                this.enemySimpleDamage = 8;
-                this.expectedHPChange = 7.5f;
-                this.xpChange = 10;
-                this.expectedXPChange = 7.0f;
-                this.enemyAC = 14;
-            }
-            else if (target.tag.Equals("Dragon"))
-            {
-                this.dmgRoll = () => RandomHelper.RollD12() + RandomHelper.RollD12();
-                this.enemySimpleDamage = 15;
-                this.expectedHPChange = 13.0f;
-                this.xpChange = 20;
-                this.expectedXPChange = 10.0f;
-                this.enemyAC = 18;
+                this.dmgRoll = () => 0;
+                this.enemySimpleDamage = 0;
+                this.expectedHPChange = 0;
+                this.xpChange = 0;
+                this.expectedXPChange = 0;
+                this.enemyAC = 0;
             }
         }
 
@@ -51,11 +45,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         {
             var change = base.GetGoalChange(goal);
 
-            if (goal.Name == AutonomousCharacter.SURVIVE_GOAL)
-            {
-                change += this.expectedHPChange;
-            }
-            else if (goal.Name == AutonomousCharacter.GAIN_LEVEL_GOAL)
+            if (goal.Name == AutonomousCharacter.GAIN_LEVEL_GOAL)
             {
                 change += -this.expectedXPChange;
             }
@@ -63,26 +53,32 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
             return change;
         }
 
-        public override bool CanExecute()
-        {
-            if (!base.CanExecute()) return false;
-            if (Character.GetDistanceToTarget(Character.transform.position,
-                    Target.transform.position) > 4) return false;
-            return true;
-        }
-
-        public override bool CanExecute(WorldModel worldModel)
-        {
-            if (!base.CanExecute(worldModel)) return false;
-            if (Character.GetDistanceToTarget((Vector3)worldModel.GetProperty(Properties.POSITION),
-                    Target.transform.position) > 4) return false;
-            return true;
-        }
-        
         public override void Execute()
         {
             base.Execute();
-            GameManager.Instance.SwordAttack(this.Target);
+            GameManager.Instance.DivineSmite(this.Target);
+        }
+        
+        public override bool CanExecute()
+        {
+            if (!base.CanExecute() || !isSkeleton || Character.baseStats.Mana < 2
+            || (Character.GetDistanceToTarget(Character.transform.position,
+                        Target.transform.position) > 4))
+            {
+                return false;
+            }
+            return true;
+        }
+        
+        public override bool CanExecute(WorldModel worldModel)
+        {
+            if (!base.CanExecute() || !isSkeleton || (int) worldModel.GetProperty(Properties.MANA) < 2
+                || (Character.GetDistanceToTarget((Vector3) worldModel.GetProperty(Properties.POSITION), 
+                    Target.transform.position) > 4))
+            {
+                return false;
+            }
+            return true;
         }
 
         public override void ApplyActionEffects(WorldModel worldModel)
@@ -91,6 +87,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
 
             int hp = (int)worldModel.GetProperty(Properties.HP);
             int shieldHp = (int)worldModel.GetProperty(Properties.ShieldHP);
+            int mana = (int)worldModel.GetProperty(Properties.MANA);
             int xp = (int)worldModel.GetProperty(Properties.XP);
 
             int damage = 0;
@@ -115,6 +112,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
             }
 
             worldModel.SetProperty(Properties.ShieldHP, remainingShield);
+            worldModel.SetProperty(Properties.MANA, mana - 2);
             var surviveValue = worldModel.GetGoalValue(AutonomousCharacter.SURVIVE_GOAL);
             worldModel.SetGoalValue(AutonomousCharacter.SURVIVE_GOAL, surviveValue + remainingDamage);
 

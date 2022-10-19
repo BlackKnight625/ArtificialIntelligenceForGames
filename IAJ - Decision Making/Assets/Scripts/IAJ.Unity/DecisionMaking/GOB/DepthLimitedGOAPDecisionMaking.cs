@@ -1,14 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActions;
 using Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel;
 using Assets.Scripts.Game;
+using Action = Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.Action;
 
 namespace Assets.Scripts.IAJ.Unity.DecisionMaking.GOB
 {
     public class DepthLimitedGOAPDecisionMaking
     {
-        public const int MAX_DEPTH = 3;
+        public const int MAX_DEPTH = 4;
         public int ActionCombinationsProcessedPerFrame { get; set; }
         public float TotalProcessingTime { get; set; }
         public int TotalActionCombinationsProcessed { get; set; }
@@ -51,9 +53,41 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.GOB
 
             var startTime = Time.realtimeSinceStartup;
 
-           
-            //TODO implement
+            float currentValue;
+            Action[] actions = new Action[MAX_DEPTH];
+            Action nextAction;
+            
 
+            while (CurrentDepth >= 0)
+            {
+                if (CurrentDepth >= MAX_DEPTH)
+                {
+                    TotalActionCombinationsProcessed++;
+                    currentValue = Models[CurrentDepth].CalculateDiscontentment(Goals);
+                    if (currentValue < BestDiscontentmentValue)
+                    {
+                        BestDiscontentmentValue = currentValue;
+                        BestAction = actions[0];
+                    }
+                    CurrentDepth -= 1;
+                    continue;
+                }
+
+                processedActions++;
+                nextAction = Models[CurrentDepth].GetNextAction();
+                if (nextAction != null)
+                {
+                    Models[CurrentDepth + 1] = Models[CurrentDepth].GenerateChildWorldModel();
+                    nextAction.ApplyActionEffects(Models[CurrentDepth + 1]);
+                    BestActionSequence[CurrentDepth] = nextAction;
+                    actions[CurrentDepth] = nextAction;
+                    CurrentDepth += 1;
+                }
+                else
+                    CurrentDepth -= 1;
+            }
+            
+            Debug.Log(this.TotalProcessingTime);
             this.TotalProcessingTime += Time.realtimeSinceStartup - startTime;
             this.InProgress = false;
             return this.BestAction;
