@@ -39,7 +39,7 @@ namespace Assets.Scripts.Game.NPCs
         public bool usingFormation;
 
 
-        void Start()
+        public virtual void Start()
         {
             agent = this.GetComponent<NavMeshAgent>();
             this.Target = GameObject.FindGameObjectWithTag("Player");
