@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActions;
 using Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel;
 using UnityEngine;
@@ -47,7 +48,6 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.GOB
             InProgress = true;
             Action bestAction = actions[0];
             var bestValue = float.PositiveInfinity;
-            //var bestValue = CalculateDiscontentment(actions[0], goals);
             
             foreach(Action action in actions) {
                 if (action.CanExecute())

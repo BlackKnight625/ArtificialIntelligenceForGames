@@ -13,7 +13,6 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
         public List<MCTSNode> ChildNodes { get; private set; }
         public int N { get; set; }
         public float Q { get; set; }
-        public bool expanded { get; set; }
 
         public MCTSNode(WorldModel state)
         {
@@ -23,15 +22,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
 
         public bool IsFullyExpanded()
         {
-            foreach (MCTSNode child in this.ChildNodes)
-            {
-                if (child.expanded == false)
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return this.ChildNodes.Count == State.GetExecutableActions().Length;
         }
     }
 }
