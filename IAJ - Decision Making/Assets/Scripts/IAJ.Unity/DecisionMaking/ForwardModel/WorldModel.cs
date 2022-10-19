@@ -139,13 +139,40 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
 
         public virtual bool IsTerminal()
         {
-            return true;
+            if((int) (this.GetProperty("HP")) <= 0)
+            {
+                return true;
+            }
+            if ((int)(this.GetProperty("MONEY")) > 25)
+            {
+                return true;
+            }
+            if ((int)(this.GetProperty("TIME")) >= 200)
+            {
+                return true;
+            }
+            return false;
         }
         
 
         public virtual float GetScore()
         {
-            return 0.0f;
+            if ((int)(GetProperty("HP")) <= 0)
+            {
+                return 0.0f;
+            }
+            if ((int)(GetProperty("MONEY")) > 25)
+            {
+                return 1.0f;
+            }
+            if ((int)(this.GetProperty("TIME")) >= 200)
+            {
+                return 0.0f;
+            }
+            //A fazer decidir weights
+            return 0.5f * ((float)GetProperty("HP") / (float)GetProperty("MAXHP"))
+                + 0.3f * ((float)GetProperty("Money") / 25.0f)
+                + 0.2f * ((float)GetProperty("TIME") / 200.0f);
         }
 
         public virtual int GetNextPlayer()

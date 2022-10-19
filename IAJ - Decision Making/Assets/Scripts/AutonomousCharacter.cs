@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel;
 using Assets.Scripts.IAJ.Unity.DecisionMaking.GOB;
 using Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActions;
-using Assets.Scripts.IAJ.Unity.Formations;
+using Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS;
 using Assets.Scripts.Game;
 
 public class AutonomousCharacter : NPC
@@ -40,6 +40,7 @@ public class AutonomousCharacter : NPC
     [Header("Decision Algorithm Options")]
     public bool GOBActive;
     public bool GOAPActive;
+    public bool MCTSActive;
 
     [Header("Character Info")]
     public bool Resting = false;
@@ -54,6 +55,7 @@ public class AutonomousCharacter : NPC
     public Action CurrentAction { get; private set; }
     public GOBDecisionMaking GOBDecisionMaking { get; set; }
     public DepthLimitedGOAPDecisionMaking GOAPDecisionMaking { get; set; }
+    public MCTS MCTS { get; set; }
 
     //private fields for internal use only
 
@@ -97,14 +99,15 @@ public class AutonomousCharacter : NPC
 
         this.SurviveGoal = new Goal(SURVIVE_GOAL, 1.0f);
 
-        this.GainLevelGoal = new Goal(GAIN_LEVEL_GOAL, 3.0f)
+        this.GainLevelGoal = new Goal(GAIN_LEVEL_GOAL, 4.0f)
         {
-            ChangeRate = 0.1f
+            InsistenceValue = 1.0f,
+            ChangeRate = 1.0f
         };
 
         this.GetRichGoal = new Goal(GET_RICH_GOAL, 0.5f)
         {
-            InsistenceValue = 5.0f,
+            InsistenceValue = 2.0f,
             ChangeRate = 0.5f
         };
 
@@ -164,6 +167,7 @@ public class AutonomousCharacter : NPC
         var worldModel = new CurrentStateWorldModel(GameManager.Instance, this.Actions, this.Goals);
         this.GOBDecisionMaking = new GOBDecisionMaking(this.Actions, this.Goals);
         this.GOAPDecisionMaking = new DepthLimitedGOAPDecisionMaking(worldModel, this.Actions, this.Goals);
+        this.MCTS = new MCTS(worldModel);
         this.Resting = false;
 
         DiaryText.text += "My Diary \n I awoke. What a wonderful day to kill Monsters! \n";
@@ -188,6 +192,7 @@ public class AutonomousCharacter : NPC
             // Normalize it to 0-10
             this.SurviveGoal.InsistenceValue = NormalizeGoalValues(this.SurviveGoal.InsistenceValue, 0, baseStats.Level * 10);
 
+            // Is this the best way to increment it?
             this.BeQuickGoal.InsistenceValue = baseStats.Time;
             this.BeQuickGoal.InsistenceValue = NormalizeGoalValues(this.BeQuickGoal.InsistenceValue, 0, (float)GameManager.GameConstants.TIME_LIMIT);
 
@@ -200,6 +205,11 @@ public class AutonomousCharacter : NPC
             this.GainLevelGoal.InsistenceValue = NormalizeGoalValues(this.GainLevelGoal.InsistenceValue, 0, baseStats.Level * 10);
 
             this.GetRichGoal.InsistenceValue += this.GetRichGoal.ChangeRate;
+            if (baseStats.Money > this.previousGold)
+            {
+                this.GetRichGoal.InsistenceValue -= baseStats.Money - this.previousGold;
+                this.previousGold = baseStats.Money;
+            }
             // Is this the best way to increment it?
             this.GetRichGoal.InsistenceValue = NormalizeGoalValues(this.GetRichGoal.InsistenceValue, 0, 25);
 
@@ -215,6 +225,10 @@ public class AutonomousCharacter : NPC
                 this.GOAPDecisionMaking.InitializeDecisionMakingProcess();
             else if (GOBActive)
                 this.GOBDecisionMaking.InProgress = true;
+            else if (MCTSActive)
+            {
+                this.MCTS.InitializeMCTSearch();
+            }
 
         }
 
@@ -254,25 +268,22 @@ public class AutonomousCharacter : NPC
         {
             this.UpdateGOB();
         }
+        else if (this.MCTSActive)
+        {
+            this.UpdateMCTS();
+        }
 
         if (this.CurrentAction != null)
         {
             if (this.CurrentAction.CanExecute())
             {
-
                 this.CurrentAction.Execute();
             }
-
-
         }
-
         if (navMeshAgent.hasPath)
         {
             DrawPath();
-
         }
-           
-
     }
 
     public void AddToDiary(string s)
@@ -345,6 +356,41 @@ public class AutonomousCharacter : NPC
         {
             this.BestActionSequence.text = "Best Action Sequence:\nNone";
             this.BestActionText.text = "Best Action: \n Node";
+        }
+    }
+    
+    private void UpdateMCTS()
+    {
+        bool newDecision = false;
+        if (this.MCTS.InProgress)
+        {
+            //choose an action using the GOB Decision Making process
+            var action = this.MCTS.Run();
+            if (action != null && action != this.CurrentAction)
+            {
+                this.CurrentAction = action;
+                newDecision = true;
+            }
+        }
+
+        this.TotalProcessingTimeText.text = "Process. Time: " + this.MCTS.TotalProcessingTime.ToString("F");
+        this.BestDiscontentmentText.text = "Current Iterations: " + this.MCTS.CurrentIterations;
+        this.ProcessedActionsText.text = "Current Depth: " + this.MCTS.CurrentDepth;
+
+        if (newDecision)
+        {
+            AddToDiary(" I decided to " + this.CurrentAction.Name);
+        }
+        var actionText = "";
+        if (this.MCTS.BestActionSequence != null)
+        {
+            foreach (var action in this.MCTS.BestActionSequence)
+            {
+                actionText += "\n" + action.Name;
+            }
+
+            this.BestActionSequence.text = "Best Action Sequence: " + actionText;
+            this.BestActionText.text = "Best Action: " + this.CurrentAction.Name;
         }
     }
 

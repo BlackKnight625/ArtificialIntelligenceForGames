@@ -87,7 +87,6 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.GOB
                     CurrentDepth -= 1;
             }
             
-            Debug.Log(this.TotalProcessingTime);
             this.TotalProcessingTime += Time.realtimeSinceStartup - startTime;
             this.InProgress = false;
             return this.BestAction;

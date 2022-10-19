@@ -5,5 +5,10 @@
         public float Value { get; set; }
         public int PlayerID { get; set; }
 
+        public Reward(float value, int playerID)
+        {
+            this.Value = value;
+            this.PlayerID = playerID;
+        }
     }
 }
