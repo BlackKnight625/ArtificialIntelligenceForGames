@@ -70,28 +70,41 @@ namespace Assets.Scripts.Game
             navMeshAgent.isStopped = true;
         }
 
-        // Simple way of calculating distance left to target using Unity's navmesh
-        public float GetDistanceToTarget(Vector3 originalPosition, Vector3 targetPosition)
-        {
-            var distance = 0.0f;
+        private readonly Dictionary<(Vector3, Vector3), float> _cache = new();
 
-            NavMeshPath result = new NavMeshPath();
-            var r = NavMesh.CalculatePath(originalPosition, targetPosition, NavMesh.AllAreas, result);
-            //var r = navMeshAgent.CalculatePath(targetPosition, result);
-            if (r == true)
-            {
-                var currentPosition = originalPosition;
-                foreach (var c in result.corners)
+        // Simple way of calculating distance left to target using Unity's navmesh
+        public float GetDistanceToTarget(Vector3 originalPosition, Vector3 targetPosition) {
+            (Vector3, Vector3) cacheKey = (originalPosition, targetPosition);
+            
+            try {
+                return _cache[cacheKey];
+            }
+            catch (KeyNotFoundException e) {
+                // Cache does not contain result for the given input
+                var distance = 0.0f;
+
+                NavMeshPath result = new NavMeshPath();
+                var r = NavMesh.CalculatePath(originalPosition, targetPosition, NavMesh.AllAreas, result);
+                //var r = navMeshAgent.CalculatePath(targetPosition, result);
+                if (r == true)
                 {
-                    //Rough estimate, it does not account for shortcuts so we have to multiply it
-                    distance += Vector3.Distance(currentPosition, c) * 0.65f;
-                    currentPosition = c;
+                    var currentPosition = originalPosition;
+                    foreach (var c in result.corners)
+                    {
+                        //Rough estimate, it does not account for shortcuts so we have to multiply it
+                        distance += Vector3.Distance(currentPosition, c) * 0.65f;
+                        currentPosition = c;
+                    }
                 }
+                else {
+                    //Default value
+                    distance = 100;
+                }
+
+                _cache[cacheKey] = distance;
+
                 return distance;
             }
-
-            //Default value
-            return 100;
         }
 
         #endregion
