@@ -24,7 +24,7 @@ namespace Assets.Scripts.Game.NPCs
         public Vector3 growthPerTick = new Vector3(0.02f, 0.02f, 0.02f);
         public int changeTicks = 12;
         public int maxChanges = 4;
-        public float redPerTick = 0.02f;
+        public float redPerTick = 0.03f;
         public int screamCooldownTicks = 50 * 4;
         
         private int _currentChanges = 0;
@@ -110,6 +110,8 @@ namespace Assets.Scripts.Game.NPCs
                 
                 yield return new WaitForFixedUpdate();
             }
+
+            _screamCooldown = 0;
 
             ScreamLocation = null;
         }

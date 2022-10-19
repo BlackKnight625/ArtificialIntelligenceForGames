@@ -10,7 +10,7 @@ using Assets.Scripts.Game;
 
 namespace Assets.Scripts.IAJ.Unity.DecisionMaking.BehaviorTree.EnemyTasks
 {
-    class IsCharacterNearTarget : Task
+    public class IsCharacterNearTarget : Task
     {
         protected NPC Character { get; set; }
 

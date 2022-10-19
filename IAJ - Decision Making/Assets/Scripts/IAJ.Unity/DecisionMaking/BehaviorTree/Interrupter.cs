@@ -1,14 +1,14 @@
 ﻿using System;
 
 namespace Assets.Scripts.IAJ.Unity.DecisionMaking.BehaviorTree {
-    public class Interruptor : Task {
+    public class Interrupter : Task {
 
-        private Task _task;
+        private readonly Task _task;
         
         public bool Interrupt { get; set; }
         
         
-        public Interruptor(Task task) {
+        public Interrupter(Task task) {
             Interrupt = false;
 
             _task = task;

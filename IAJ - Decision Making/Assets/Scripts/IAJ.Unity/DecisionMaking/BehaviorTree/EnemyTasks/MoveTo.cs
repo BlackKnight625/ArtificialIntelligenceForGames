@@ -10,7 +10,7 @@ using Assets.Scripts.Game;
 
 namespace Assets.Scripts.IAJ.Unity.DecisionMaking.BehaviorTree.EnemyTasks
 {
-    class MoveTo : Task
+    public class MoveTo : Task
     {
         protected NPC Character { get; set; }
 
