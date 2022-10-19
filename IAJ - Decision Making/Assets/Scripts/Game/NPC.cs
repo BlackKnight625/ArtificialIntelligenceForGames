@@ -41,7 +41,17 @@ namespace Assets.Scripts.Game
             navMeshAgent = this.GetComponent<NavMeshAgent>();
         }
 
+        public virtual void Start() {
+            throw new NotImplementedException();
+        }
 
+        public virtual void foundPlayer(GameObject player) {
+            // Do nothing by default
+        }
+
+        public virtual bool notifyFoundPlayer() {
+            return false;
+        }
 
         #region Navmesh Pathfinding Methods
 

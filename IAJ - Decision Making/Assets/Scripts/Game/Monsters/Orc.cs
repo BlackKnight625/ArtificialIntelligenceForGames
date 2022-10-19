@@ -13,8 +13,22 @@ namespace Assets.Scripts.Game.NPCs
 
     public class Orc : Monster {
 
+        private static GameObject _screamLocation;
+
         public GameObject patrol1;
         public GameObject patrol2;
+        public AudioSource scream;
+        
+        public static GameObject ScreamLocation {
+            get => _screamLocation;
+            set {
+                if (_screamLocation != null) {
+                    Destroy(_screamLocation);
+                }
+
+                _screamLocation = value;
+            }
+        }
         
         public Orc()
         {
@@ -27,7 +41,24 @@ namespace Assets.Scripts.Game.NPCs
             this.enemyStats.AwakeDistance = 10;
             this.enemyStats.WeaponRange = 3;
         }
+        
+        
 
+        public override void foundPlayer(GameObject player) {
+            // Creating the screaming location
+            ScreamLocation = new GameObject();
+
+            ScreamLocation.transform.position = character.transform.position;
+            
+            // Playing a sound
+            scream.Play();
+        }
+
+        public override bool notifyFoundPlayer() {
+            return true;
+        }
+        
+        
 
         public override void InitializeBehaviourTree()
         {

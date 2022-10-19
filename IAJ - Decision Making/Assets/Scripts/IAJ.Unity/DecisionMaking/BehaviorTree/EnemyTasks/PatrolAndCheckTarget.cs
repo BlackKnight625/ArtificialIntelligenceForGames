@@ -3,15 +3,15 @@ using UnityEngine;
 
 namespace Assets.Scripts.IAJ.Unity.DecisionMaking.BehaviorTree.EnemyTasks {
     public class MoveToPatrolAndCheckTarget : Task {
-        private MoveTo _moveToPatrol1;
-        private MoveTo _moveToPatrol2;
+        private Sequence _moveToPatrols;
         private IsCharacterNearTarget _isCharacterNearPlayer;
-        private bool _togglePatrol = true; // Allows the character to toggle between patrol 1 and 2
 
         public MoveToPatrolAndCheckTarget(Monster character, GameObject target,
             float targetRange, GameObject patrol1, GameObject patrol2, float patrolRange) {
-            _moveToPatrol1 = new MoveTo(character, patrol1, patrolRange);
-            _moveToPatrol2 = new MoveTo(character, patrol2, patrolRange);
+            _moveToPatrols = new Sequence(
+                new MoveTo(character, patrol1, patrolRange),
+                        new MoveTo(character, patrol2, patrolRange)
+                );
             _isCharacterNearPlayer = new IsCharacterNearTarget(character, target, targetRange);
         }
 
@@ -22,20 +22,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.BehaviorTree.EnemyTasks {
             }
             else {
                 // Character is not near target. Patrol.
-                
-                Result result;
-                
-                result = _togglePatrol ? _moveToPatrol1.Run() : _moveToPatrol2.Run();
-                
-                if (result == Result.Success) {
-                    // Reached the patrol point. Switching patrol point
-                    _togglePatrol = !_togglePatrol;
-                        
-                    return Result.Success;
-                }
-                else {
-                    return result;
-                }
+                return _moveToPatrols.Run();
             }
         }
     }

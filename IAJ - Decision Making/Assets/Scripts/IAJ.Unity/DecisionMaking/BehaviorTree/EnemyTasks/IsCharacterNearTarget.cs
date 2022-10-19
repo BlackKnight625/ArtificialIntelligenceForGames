@@ -27,8 +27,14 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.BehaviorTree.EnemyTasks
 
         public override Result Run()
         {
-            if (Vector3.Distance(Character.gameObject.transform.position, this.Target.transform.position) <= range)
+            if (Vector3.Distance(Character.gameObject.transform.position, this.Target.transform.position) <= range) {
+                if (Character.notifyFoundPlayer() && Target.CompareTag("Player")) {
+                    // This character wants to know when a player is found
+                    Character.foundPlayer(Target);
+                }
+                
                 return Result.Success;
+            }
             else return Result.Failure;
 
         }
