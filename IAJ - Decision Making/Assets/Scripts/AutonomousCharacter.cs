@@ -347,7 +347,9 @@ public class AutonomousCharacter : NPC
             var actionText = "";
             foreach (var action in this.GOAPDecisionMaking.BestActionSequence)
             {
-                actionText += "\n" + action.Name;
+                if (action != null) {
+                    actionText += "\n" + action.Name;
+                }
             }
             this.BestActionSequence.text = "Best Action Sequence: " + actionText;
             this.BestActionText.text = "Best Action: " + GOAPDecisionMaking.BestAction.Name;

@@ -5,15 +5,22 @@ using Assets.Scripts.IAJ.Unity.Utils;
 
 namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
 {
-    public class WorldModel
-    {
+    public class WorldModel {
+
+        private List<Action> _executableActions;
+        private IEnumerator<Action> _executableActionEnumerator;
+        
         private Dictionary<string, object> Properties { get; set; }
         private List<Action> Actions { get; set; }
-        protected IEnumerator<Action> ActionEnumerator { get; set; } 
+        protected List<Action> ExecutableActions => _executableActions ??= FindExecutableActions();
+
+        protected IEnumerator<Action> ExecutableActionEnumerator => _executableActionEnumerator ??= ExecutableActions.GetEnumerator();
 
         private Dictionary<string, float> GoalValues { get; set; } 
 
         protected WorldModel Parent { get; set; }
+        
+        public int ExecutableActionsSize => ExecutableActions.Count;
 
         public WorldModel(List<Action> actions)
         {
@@ -21,7 +28,6 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
             this.GoalValues = new Dictionary<string, float>();
             this.Actions = new List<Action>(actions);
             this.Actions.Shuffle();
-            this.ActionEnumerator = this.Actions.GetEnumerator();
         }
 
         public WorldModel(WorldModel parent)
@@ -31,7 +37,6 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
             this.Actions = new List<Action>(parent.Actions);
             this.Actions.Shuffle();
             this.Parent = parent;
-            this.ActionEnumerator = this.Actions.GetEnumerator();
         }
 
         public virtual object GetProperty(string propertyName)
@@ -108,25 +113,12 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
             return discontentment;
         }
 
-        public virtual Action GetNextAction()
+        public virtual Action GetNextExecutableAction()
         {
             Action action = null;
             //returns the next action that can be executed or null if no more executable actions exist
-            if (this.ActionEnumerator.MoveNext())
-            {
-                action = this.ActionEnumerator.Current;
-            }
-
-            while (action != null && !action.CanExecute(this))
-            {
-                if (this.ActionEnumerator.MoveNext())
-                {
-                    action = this.ActionEnumerator.Current;    
-                }
-                else
-                {
-                    action = null;
-                }
+            if (this.ExecutableActionEnumerator.MoveNext()) {
+                action = this.ExecutableActionEnumerator.Current;
             }
 
             return action;
@@ -134,7 +126,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
 
         public virtual Action[] GetExecutableActions()
         {
-            return this.Actions.Where(a => a.CanExecute(this)).ToArray();
+            return ExecutableActions.ToArray();
         }
 
         public virtual bool IsTerminal()
@@ -182,6 +174,15 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
 
         public virtual void CalculateNextPlayer()
         {
+        }
+
+        protected List<Action> FindExecutableActions() {
+            return this.Actions.Where(a => a.CanExecute(this)).ToList();
+        }
+
+        protected void ResetExecutableActions() {
+            _executableActions = FindExecutableActions();
+            _executableActionEnumerator = _executableActions.GetEnumerator();
         }
     }
 }

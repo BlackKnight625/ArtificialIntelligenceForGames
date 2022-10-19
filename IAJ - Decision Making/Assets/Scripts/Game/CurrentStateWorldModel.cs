@@ -8,7 +8,7 @@ namespace Assets.Scripts.Game
     //all required properties and goals are stored inside the game manager
     public class CurrentStateWorldModel : FutureStateWorldModel
     {
-        private Dictionary<string, Goal> Goals { get; set; } 
+        private Dictionary<string, Goal> Goals { get; set; }
 
         public CurrentStateWorldModel(GameManager gameManager, List<Action> actions, List<Goal> goals) : base(gameManager, actions)
         {
@@ -23,7 +23,7 @@ namespace Assets.Scripts.Game
 
         public void Initialize()
         {
-            this.ActionEnumerator.Reset();
+            ResetExecutableActions();
         }
 
         public override object GetProperty(string propertyName)

@@ -56,11 +56,11 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.GOB
             float currentValue;
             Action[] actions = new Action[MAX_DEPTH];
             Action nextAction;
+            bool modelHasActions = InitialWorldModel.ExecutableActionsSize != 0;
             
-
             while (CurrentDepth >= 0)
             {
-                if (CurrentDepth >= MAX_DEPTH)
+                if (!modelHasActions || CurrentDepth >= MAX_DEPTH)
                 {
                     TotalActionCombinationsProcessed++;
                     currentValue = Models[CurrentDepth].CalculateDiscontentment(Goals);
@@ -68,23 +68,35 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.GOB
                     {
                         BestDiscontentmentValue = currentValue;
                         BestAction = actions[0];
+
+                        for (int i = 0; i < actions.Length; i++) {
+                            BestActionSequence[i] = actions[i];
+                        }
                     }
                     CurrentDepth -= 1;
                     continue;
                 }
 
+                modelHasActions = Models[CurrentDepth].ExecutableActionsSize != 0;
+
                 processedActions++;
-                nextAction = Models[CurrentDepth].GetNextAction();
+                nextAction = Models[CurrentDepth].GetNextExecutableAction();
                 if (nextAction != null)
                 {
                     Models[CurrentDepth + 1] = Models[CurrentDepth].GenerateChildWorldModel();
-                    nextAction.ApplyActionEffects(Models[CurrentDepth + 1]);
-                    BestActionSequence[CurrentDepth] = nextAction;
+                    try {
+                        nextAction.ApplyActionEffects(Models[CurrentDepth + 1]);
+                    }
+                    catch (MissingReferenceException e) {
+                        Debug.Log("Hello");
+                    }
                     actions[CurrentDepth] = nextAction;
                     CurrentDepth += 1;
                 }
-                else
-                    CurrentDepth -= 1;
+                else if (modelHasActions) {
+                    // Ran out of actions (instead of starting with 0 actions)
+                    CurrentDepth -= 1;   
+                }
             }
             
             this.TotalProcessingTime += Time.realtimeSinceStartup - startTime;

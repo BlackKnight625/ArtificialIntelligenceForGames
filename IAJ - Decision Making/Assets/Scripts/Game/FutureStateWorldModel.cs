@@ -78,7 +78,7 @@ namespace Assets.Scripts.Game
             //if not, then the next player will be player 0
         }
 
-        public override Action GetNextAction()
+        public override Action GetNextExecutableAction()
         {
             Action action;
             if (this.NextPlayer == 1)
@@ -87,7 +87,7 @@ namespace Assets.Scripts.Game
                 this.NextEnemyAction = null;
                 return action;
             }
-            else return base.GetNextAction();
+            else return base.GetNextExecutableAction();
         }
 
         public override Action[] GetExecutableActions()
