@@ -16,7 +16,6 @@ public class AutonomousCharacter : NPC
     public const string GAIN_LEVEL_GOAL = "GainXP";
     public const string BE_QUICK_GOAL = "BeQuick";
     public const string GET_RICH_GOAL = "GetRich";
-
     public const float DECISION_MAKING_INTERVAL = 20.0f;
     public const int RESTING_INTERVAL_TICKS = 5 * 50;
     public const int REST_HP_RECOVERY = 2;

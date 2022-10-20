@@ -60,7 +60,8 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
                 worldModel.GetGoalValue(AutonomousCharacter.SURVIVE_GOAL) - 2);
             
             worldModel.SetGoalValue(AutonomousCharacter.BE_QUICK_GOAL,
-                worldModel.GetGoalValue(AutonomousCharacter.BE_QUICK_GOAL) + 5);
+                worldModel.GetGoalValue(AutonomousCharacter.BE_QUICK_GOAL) 
+                + 0.1f * AutonomousCharacter.RESTING_INTERVAL_TICKS); // 0.1f Change rate times ticks
             
             int hp = (int)worldModel.GetProperty(Properties.HP);
             if (hp + 2 <= (int) worldModel.GetProperty(Properties.MAXHP))

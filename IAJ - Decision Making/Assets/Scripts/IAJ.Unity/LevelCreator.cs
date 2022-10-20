@@ -136,6 +136,16 @@ public class LevelCreator : MonoBehaviour
                     patrol.name = "PatrolPoint" + patrolCounter;
                     patrolCounter++;
                 }
+                
+                else if (letter == "f") {
+                    //Formations
+                    var orc = GameObject.Instantiate(orcPrefab, monsterSpawn);
+                    orc.transform.localPosition = new Vector3(x * cellSize, 0f, y * cellSize - 0.5f);
+                    orc.transform.localScale *= cellSize;
+                    orc.name = "Orc" + orCounter;
+                    orCounter++;
+
+                }
             }
         }
 
