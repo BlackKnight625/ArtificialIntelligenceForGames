@@ -34,8 +34,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         
         public override bool CanExecute(WorldModel worldModel)
         {
-            int mana = (int)worldModel.GetProperty(Properties.MANA);
-            return base.CanExecute() && mana >= _manaCost;
+            return base.CanExecute() && (int)worldModel.GetProperty(Properties.MANA) >= _manaCost;
         }
 
         public override void Execute()
@@ -44,6 +43,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
             base.Execute();
             GameManager.Instance.SpeedUp();
             GameManager.Instance.WorldChanged = true;
+            Character.playSpeedUpSound();
         }
 
         public override void ApplyActionEffects(WorldModel worldModel)

@@ -22,6 +22,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
                 ticks++;
             }
             character.Speed /= 2;
+            character.navMeshAgent.speed /= 2;
         }
     }
 }

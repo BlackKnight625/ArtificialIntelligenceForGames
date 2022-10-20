@@ -353,6 +353,7 @@ public class GameManager : MonoBehaviour
     {
         this.Character.baseStats.Mana -= 5;
         this.Character.Speed *= AutonomousCharacter.SPEEDUP_ENHANCE;
+        this.Character.navMeshAgent.speed *= AutonomousCharacter.SPEEDUP_ENHANCE;
     }
 
     private bool CheckRange(GameObject obj, float maximumSqrDistance)
