@@ -18,8 +18,10 @@ public class AutonomousCharacter : NPC
     public const string GET_RICH_GOAL = "GetRich";
 
     public const float DECISION_MAKING_INTERVAL = 20.0f;
-    public const float RESTING_INTERVAL = 5.0f;
+    public const int RESTING_INTERVAL_TICKS = 5 * 50;
     public const int REST_HP_RECOVERY = 2;
+    public const int SPEEDUP_INTERVAL_TICKS = 10 * 50;
+    public const float SPEEDUP_ENHANCE = 2.0f;
 
     //UI Variables
     private Text SurviveGoalText;
@@ -139,7 +141,10 @@ public class AutonomousCharacter : NPC
         this.Actions.Add(new LevelUp(this));
         
         this.Actions.Add(new ShieldOfFaith(this));
-
+        
+        this.Actions.Add(new Pray(this));
+        
+        this.Actions.Add(new SpeedUp(this));
 
         foreach (var chest in GameObject.FindGameObjectsWithTag("Chest"))
         {

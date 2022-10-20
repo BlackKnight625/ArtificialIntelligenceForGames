@@ -34,13 +34,16 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         
         public override bool CanExecute(WorldModel worldModel)
         {
-            return base.CanExecute() && (float)worldModel.GetProperty(Properties.MANA) >= 5;
+            int mana = (int)worldModel.GetProperty(Properties.MANA);
+            return base.CanExecute() && mana >= 5;
         }
 
         public override void Execute()
         {
+            SpeedUpTime speedUpTime = new SpeedUpTime(Character);
             base.Execute();
             GameManager.Instance.SpeedUp();
+            GameManager.Instance.WorldChanged = true;
         }
 
         public override void ApplyActionEffects(WorldModel worldModel)
@@ -50,7 +53,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
             worldModel.SetGoalValue(AutonomousCharacter.BE_QUICK_GOAL,
                 worldModel.GetGoalValue(AutonomousCharacter.BE_QUICK_GOAL) -
                 worldModel.GetGoalValue(AutonomousCharacter.BE_QUICK_GOAL) / 2 * this._durationTicks);
-            worldModel.SetProperty(Properties.MANA, (float) worldModel.GetProperty(Properties.MANA) - 5);
+            worldModel.SetProperty(Properties.MANA, (int) worldModel.GetProperty(Properties.MANA) - 5);
         }
     }
 }
