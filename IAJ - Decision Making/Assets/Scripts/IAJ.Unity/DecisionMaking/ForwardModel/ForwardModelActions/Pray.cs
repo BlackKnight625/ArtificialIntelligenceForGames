@@ -49,6 +49,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
             PrayTime prayTime = new PrayTime(Character);
             base.Execute();
             GameManager.Instance.Pray();
+            Character.playPraySound();
         }
 
         public override void ApplyActionEffects(WorldModel worldModel)

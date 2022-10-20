@@ -44,6 +44,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
             base.Execute();
             GameManager.Instance.SpeedUp();
             GameManager.Instance.WorldChanged = true;
+            Character.playSpeedUpSound();
         }
 
         public override void ApplyActionEffects(WorldModel worldModel)
