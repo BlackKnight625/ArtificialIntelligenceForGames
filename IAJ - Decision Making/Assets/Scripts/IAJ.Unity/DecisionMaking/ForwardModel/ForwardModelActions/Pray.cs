@@ -71,9 +71,6 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
             {
                 worldModel.SetProperty(Properties.HP, Properties.MAXHP);
             }
-            worldModel.SetGoalValue(AutonomousCharacter.SURVIVE_GOAL, 
-                worldModel.GetGoalValue(AutonomousCharacter.SURVIVE_GOAL) +
-                (int) worldModel.GetProperty(Properties.HP) + 2);
             worldModel.SetProperty(Properties.TIME, (float) worldModel.GetProperty(Properties.TIME) + 5);
         }
     }

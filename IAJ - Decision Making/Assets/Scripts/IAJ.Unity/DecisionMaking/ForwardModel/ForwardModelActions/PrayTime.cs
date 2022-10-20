@@ -22,6 +22,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
                 ticks++;
             }
             character.Resting = false;
+            character.navMeshAgent.isStopped = false;
             GameManager.Instance.WorldChanged = true;
         }
     }

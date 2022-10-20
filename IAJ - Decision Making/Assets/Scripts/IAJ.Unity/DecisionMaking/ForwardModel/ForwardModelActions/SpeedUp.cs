@@ -34,8 +34,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         
         public override bool CanExecute(WorldModel worldModel)
         {
-            int mana = (int)worldModel.GetProperty(Properties.MANA);
-            return base.CanExecute() && mana >= 5;
+            return base.CanExecute() && (int)worldModel.GetProperty(Properties.MANA) >= 5;
         }
 
         public override void Execute()
