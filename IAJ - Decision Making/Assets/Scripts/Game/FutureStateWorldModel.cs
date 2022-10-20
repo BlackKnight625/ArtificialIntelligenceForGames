@@ -12,6 +12,17 @@ namespace Assets.Scripts.Game
         protected Action NextEnemyAction { get; set; }
         protected Action[] NextEnemyActions { get; set; }
 
+        public override int ExecutableActionsSize {
+            get {
+                if (this.NextPlayer == 1) {
+                    return NextEnemyActions.Length;
+                }
+                else {
+                    return base.ExecutableActionsSize;
+                }
+            }
+        }
+
         public FutureStateWorldModel(GameManager gameManager, List<Action> actions) : base(actions)
         {
             this.GameManager = gameManager;

@@ -20,7 +20,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
 
         protected WorldModel Parent { get; set; }
         
-        public int ExecutableActionsSize => ExecutableActions.Count;
+        public virtual int ExecutableActionsSize => ExecutableActions.Count;
 
         public WorldModel(List<Action> actions)
         {

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.AI;
@@ -79,8 +80,8 @@ public class AutonomousCharacter : NPC
     }
 
     public void Start() {
-        _praySound = GetComponents<AudioSource>()[0];
-        _speedUpSound = GetComponents<AudioSource>()[1];
+        _praySound = GetComponents<AudioSource>().FirstOrDefault(a => a.clip.name == "aaahmmmmm");
+        _speedUpSound = GetComponents<AudioSource>().FirstOrDefault(a => a.clip.name == "gotta-go-fast");
         
         //This is the actual speed of the agent
         lineRenderer = this.GetComponent<LineRenderer>();
