@@ -180,7 +180,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
             return this.Actions.Where(a => a.CanExecute(this)).ToList();
         }
 
-        protected void ResetExecutableActions() {
+        public void ResetExecutableActions() {
             _executableActions = FindExecutableActions();
             _executableActionEnumerator = _executableActions.GetEnumerator();
         }

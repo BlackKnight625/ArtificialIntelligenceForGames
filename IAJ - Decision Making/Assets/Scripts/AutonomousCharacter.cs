@@ -42,6 +42,10 @@ public class AutonomousCharacter : NPC
     public bool GOAPActive;
     public bool MCTSActive;
 
+    [Header("MCTS Playout action chooser")]
+    public bool MCTSPlayoutRandomAction;
+    public bool MCTSPlayoutBiasedAction;
+
     [Header("Character Info")]
     public bool Resting = false;
     public float StopRestTime;
@@ -164,10 +168,22 @@ public class AutonomousCharacter : NPC
         }
 
         // Initialization of Decision Making Algorithms
+        MCTSPlayoutActionChooser mctsPlayoutActionChooser;
+        
+        if (MCTSPlayoutRandomAction) {
+            mctsPlayoutActionChooser = new RandomActionChooser();
+        }
+        else if (MCTSPlayoutBiasedAction) {
+            mctsPlayoutActionChooser = new BiasedActionChooser();
+        }
+        else {
+            mctsPlayoutActionChooser = new RandomActionChooser();
+        }
+        
         var worldModel = new CurrentStateWorldModel(GameManager.Instance, this.Actions, this.Goals);
         this.GOBDecisionMaking = new GOBDecisionMaking(this.Actions, this.Goals);
         this.GOAPDecisionMaking = new DepthLimitedGOAPDecisionMaking(worldModel, this.Actions, this.Goals);
-        this.MCTS = new MCTS(worldModel);
+        this.MCTS = new MCTS(worldModel, mctsPlayoutActionChooser);
         this.Resting = false;
 
         DiaryText.text += "My Diary \n I awoke. What a wonderful day to kill Monsters! \n";

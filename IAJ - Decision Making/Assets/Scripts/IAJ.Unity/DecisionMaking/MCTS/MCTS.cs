@@ -28,10 +28,11 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
         protected CurrentStateWorldModel CurrentStateWorldModel { get; set; }
         protected MCTSNode InitialNode { get; set; }
         protected System.Random RandomGenerator { get; set; }
-        
+
+        private MCTSPlayoutActionChooser _mctsPlayoutActionChooser;
         
 
-        public MCTS(CurrentStateWorldModel currentStateWorldModel)
+        public MCTS(CurrentStateWorldModel currentStateWorldModel, MCTSPlayoutActionChooser mctsPlayoutActionChooser)
         {
             this.InProgress = false;
             this.CurrentStateWorldModel = currentStateWorldModel;
@@ -39,6 +40,8 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
             this.MaxIterationsProcessedPerFrame = 10;
             this.RandomGenerator = new System.Random();
             this.TotalProcessingTime = 0.0f;
+
+            _mctsPlayoutActionChooser = mctsPlayoutActionChooser;
         }
 
 
@@ -72,24 +75,17 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
 
             var startTime = Time.realtimeSinceStartup;
             this.CurrentIterationsInFrame = 0;
-            int iterations = 0;
             //while within computational budget
-            while (iterations < MaxIterations)
+            while (CurrentIterations < MaxIterations)
             {
                 //Selection + Expansion
                 MCTSNode selectedNode = Selection(rootNode);
-
-                if (selectedNode.ChildNodes.Count > 0)
-                {
-                    selectedNode = selectedNode.ChildNodes[UnityEngine.Random.Range(0, selectedNode.ChildNodes.Count)];
-                }
                 //Playout
                 reward = Playout(selectedNode.State);
                 
                 //Backpropagation
                 Backpropagate(selectedNode, reward);
-                iterations++;
-                this.CurrentIterations = iterations;
+                CurrentIterations++;
             }
 
             // return best initial child
@@ -128,7 +124,8 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
                 while (!playoutState.IsTerminal() && depth < this.playoutDepth)
                 {
                     Action[] executableActions = playoutState.GetExecutableActions();
-                    executableActions[UnityEngine.Random.Range(0, executableActions.Length)].ApplyActionEffects(playoutState);
+                    _mctsPlayoutActionChooser.chooseAction(executableActions, playoutState).ApplyActionEffects(playoutState);
+                    playoutState.ResetExecutableActions(); // Must reset since the actions available are now different
                     playoutState.CalculateNextPlayer();
                     depth++;
                 }
@@ -148,27 +145,18 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
             }
         }
 
-        protected MCTSNode Expand(MCTSNode parent)
-        {
-            Action[] actions = parent.State.GetExecutableActions();
-            Action actionToExpand;
-            MCTSNode child;
-            foreach (Action action in actions)
-            {
-                WorldModel newState = parent.State.GenerateChildWorldModel();
-                action.ApplyActionEffects(newState);
-                newState.CalculateNextPlayer();
-                child = new MCTSNode(newState);
-                child.Action = action;
-                child.Parent = parent;
-                if (!parent.ChildNodes.Contains(child))
-                {
-                    parent.ChildNodes.Add(child);
-                    return child;
-                }
-            }
+        protected MCTSNode Expand(MCTSNode parent) {
+            Action action = parent.State.GetNextExecutableAction();
+            
+            WorldModel newState = parent.State.GenerateChildWorldModel();
+            action.ApplyActionEffects(newState);
+            newState.CalculateNextPlayer();
+            MCTSNode child = new MCTSNode(newState);
+            child.Action = action;
+            child.Parent = parent;
+            parent.ChildNodes.Add(child);
 
-            return null;
+            return child;
         }
 
         protected virtual MCTSNode BestUCTChild(MCTSNode node)
