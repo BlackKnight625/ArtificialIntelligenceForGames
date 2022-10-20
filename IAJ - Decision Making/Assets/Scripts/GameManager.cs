@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour
     public List<GameObject> orcs { get; set; }
     public List<GameObject> dragons { get; set; }
     public List<GameObject> enemies { get; set; }
+    public List<GameObject> patrols { get; set; }
     public Dictionary<string, List<GameObject>> disposableObjects { get; set; }
     public bool WorldChanged { get; set; }
 
@@ -71,6 +72,7 @@ public class GameManager : MonoBehaviour
         this.skeletons = GameObject.FindGameObjectsWithTag("Skeleton").ToList();
         this.orcs = GameObject.FindGameObjectsWithTag("Orc").ToList();
         this.dragons = GameObject.FindGameObjectsWithTag("Dragon").ToList();
+        this.patrols = GameObject.FindGameObjectsWithTag("PatrolPoint").ToList();
         this.enemies.AddRange(this.skeletons);
         this.enemies.AddRange(this.orcs);
         this.enemies.AddRange(this.dragons);
