@@ -84,12 +84,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.GOB
                 if (nextAction != null)
                 {
                     Models[CurrentDepth + 1] = Models[CurrentDepth].GenerateChildWorldModel();
-                    try {
-                        nextAction.ApplyActionEffects(Models[CurrentDepth + 1]);
-                    }
-                    catch (MissingReferenceException e) {
-                        Debug.Log("Hello");
-                    }
+                    nextAction.ApplyActionEffects(Models[CurrentDepth + 1]);
                     actions[CurrentDepth] = nextAction;
                     CurrentDepth += 1;
                 }

@@ -22,7 +22,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
 
         public bool IsFullyExpanded()
         {
-            return this.ChildNodes.Count == State.GetExecutableActions().Length;
+            return this.ChildNodes.Count == State.ExecutableActionsSize;
         }
     }
 }
