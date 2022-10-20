@@ -55,5 +55,9 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
 
             return change;
         }
+
+        public override float GetHValue(WorldModel worldModel) {
+            return 0; // 5 mana - 5 hp
+        }
     }
 }

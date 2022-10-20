@@ -14,13 +14,13 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS {
             else {
                 // Searching for the best action according to heuristics
                 Action bestAction = executableActions[0];
-                float bestHeuristics = float.MinValue;
+                float bestHeuristics = float.MaxValue;
                 float heuristic;
 
                 foreach (Action action in executableActions) {
                     heuristic = action.GetHValue(currentState);
                     
-                    if (heuristic > bestHeuristics) {
+                    if (heuristic < bestHeuristics) {
                         bestHeuristics = heuristic;
                         bestAction = action;
                     }

@@ -75,5 +75,9 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
                 (int) worldModel.GetProperty(Properties.HP) + 2);
             worldModel.SetProperty(Properties.TIME, (float) worldModel.GetProperty(Properties.TIME) + 5);
         }
+
+        public override float GetHValue(WorldModel worldModel) {
+            return 0.5f; // -2 + 2.5f = duration / 2 = 0.5f
+        }
     }
 }

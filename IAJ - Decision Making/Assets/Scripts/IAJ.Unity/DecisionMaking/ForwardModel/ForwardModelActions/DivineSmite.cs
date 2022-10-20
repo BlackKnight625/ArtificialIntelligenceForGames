@@ -96,15 +96,8 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
             worldModel.SetGoalValue(AutonomousCharacter.GAIN_LEVEL_GOAL, gainLevelValue - xpChange);
         }
 
-        public override float GetHValue(WorldModel worldModel)
-        {
-            var hp = (int)worldModel.GetProperty(Properties.HP);
-            
-            if (hp > this.expectedHPChange)
-            {
-                return base.GetHValue(worldModel)/1.5f;
-            }
-            return 10.0f;
+        public override float GetHValue(WorldModel worldModel) {
+            return 2 - xpChange * 2 + GetDuration(worldModel) / 2f; // More or less arbitrary value
         }
     }
 }

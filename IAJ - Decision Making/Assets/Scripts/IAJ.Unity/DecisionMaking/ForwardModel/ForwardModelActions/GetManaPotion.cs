@@ -38,15 +38,18 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         {
             base.ApplyActionEffects(worldModel);
             int mana = (int) worldModel.GetProperty(Properties.MANA);
-            int gainedMana = (int) GetHValue(worldModel);
-            worldModel.SetProperty(Properties.MANA, (int)(mana + gainedMana));
+            int gainedMana = getGainedMana(worldModel);
+            worldModel.SetProperty(Properties.MANA, (mana + gainedMana));
             //disables the target object so that it can't be reused again
             worldModel.SetProperty(this.Target.name, false);
         }
-        
-        public override float GetHValue(WorldModel worldModel)
-        {
+
+        public int getGainedMana(WorldModel worldModel) {
             return 10 - (int) worldModel.GetProperty(Properties.MANA);
+        }
+        
+        public override float GetHValue(WorldModel worldModel) {
+            return -getGainedMana(worldModel) + GetDuration(worldModel) / 2f;
         }
     }
 }
