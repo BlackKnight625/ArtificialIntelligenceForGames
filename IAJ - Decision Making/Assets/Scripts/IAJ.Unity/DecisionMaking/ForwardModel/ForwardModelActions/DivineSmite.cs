@@ -61,9 +61,9 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         
         public override bool CanExecute()
         {
-            if (!base.CanExecute() || !isSkeleton || Character.baseStats.Mana < 2
-            || (Character.GetDistanceToTarget(Character.transform.position,
-                        Target.transform.position) > 4))
+            if (!base.CanExecute() || !isSkeleton || Character.baseStats.Mana < 2)
+            //|| (Character.GetDistanceToTarget(Character.transform.position,
+            //            Target.transform.position) > 4))
             {
                 return false;
             }
@@ -72,9 +72,9 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         
         public override bool CanExecute(WorldModel worldModel)
         {
-            if (!base.CanExecute() || !isSkeleton || (int) worldModel.GetProperty(Properties.MANA) < 2
-                || (Character.GetDistanceToTarget((Vector3) worldModel.GetProperty(Properties.POSITION), 
-                    Target.transform.position) > 4))
+            if (!base.CanExecute() || !isSkeleton || (int) worldModel.GetProperty(Properties.MANA) < 2)
+            //    || (Character.GetDistanceToTarget((Vector3) worldModel.GetProperty(Properties.POSITION), 
+            //        Target.transform.position) > 4))
             {
                 return false;
             }

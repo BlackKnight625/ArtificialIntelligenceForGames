@@ -66,16 +66,16 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         public override bool CanExecute()
         {
             if (!base.CanExecute()) return false;
-            if (Character.GetDistanceToTarget(Character.transform.position,
-                    Target.transform.position) > 4) return false;
+            //if (Character.GetDistanceToTarget(Character.transform.position,
+            //        Target.transform.position) > 4) return false;
             return true;
         }
 
         public override bool CanExecute(WorldModel worldModel)
         {
             if (!base.CanExecute(worldModel)) return false;
-            if (Character.GetDistanceToTarget((Vector3)worldModel.GetProperty(Properties.POSITION),
-                    Target.transform.position) > 4) return false;
+            //if (Character.GetDistanceToTarget((Vector3)worldModel.GetProperty(Properties.POSITION),
+            //        Target.transform.position) > 4) return false;
             return true;
         }
         
