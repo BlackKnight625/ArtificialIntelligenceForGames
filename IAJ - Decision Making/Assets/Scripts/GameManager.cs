@@ -1,10 +1,12 @@
-﻿using Assets.Scripts.IAJ.Unity.Utils;
+﻿using System;
+using Assets.Scripts.IAJ.Unity.Utils;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using Assets.Scripts.Game;
 using Assets.Scripts.Game.NPCs;
+using Object = UnityEngine.Object;
 
 public class GameManager : MonoBehaviour
 {
@@ -205,7 +207,7 @@ public class GameManager : MonoBehaviour
 
         if (enemy != null && enemy.activeSelf && InMeleeRange(enemy))
         {
-            this.Character.AddToDiary(" I Sword Attacked " + enemy.name);
+            this.Character.AddToDiary(" I Divine Smited " + enemy.name);
             
             this.enemies.Remove(enemy);
             this.disposableObjects[enemy.name].Remove(enemy);
@@ -338,17 +340,17 @@ public class GameManager : MonoBehaviour
 
     public void Pray()
     {
-        this.Character.baseStats.HP += 2;
+        this.Character.baseStats.HP += AutonomousCharacter.REST_HP_RECOVERY;
         if (this.Character.baseStats.HP > this.Character.baseStats.MaxHP)
         {
             this.Character.baseStats.HP = this.Character.baseStats.MaxHP;
         }
     }
-    
+
     public void SpeedUp()
     {
         this.Character.baseStats.Mana -= 5;
-        this.Character.Speed *= 2;
+        this.Character.Speed *= AutonomousCharacter.SPEEDUP_ENHANCE;
     }
 
     private bool CheckRange(GameObject obj, float maximumSqrDistance)

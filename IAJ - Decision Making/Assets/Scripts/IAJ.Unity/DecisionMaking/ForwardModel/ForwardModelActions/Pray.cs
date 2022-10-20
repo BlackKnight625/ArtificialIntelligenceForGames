@@ -2,6 +2,7 @@
 using System;
 using Assets.Scripts.Game;
 using UnityEngine;
+using System.Collections;
 
 namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActions
 {
@@ -36,14 +37,16 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         
         public override bool CanExecute(WorldModel worldModel)
         {
-            return base.CanExecute() && (float)worldModel.GetProperty(Properties.HP) + 2 <=
-                        (float)worldModel.GetProperty(Properties.MAXHP);
+            int hp = (int)worldModel.GetProperty(Properties.HP);
+            int maxHp = (int)worldModel.GetProperty(Properties.MAXHP);
+            return base.CanExecute() && hp + 2 <= maxHp;
         }
 
         public override void Execute()
         {
             Character.Resting = true;
             Character.StopPathfinding();
+            PrayTime prayTime = new PrayTime(Character);
             base.Execute();
             GameManager.Instance.Pray();
         }
@@ -58,8 +61,8 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
             worldModel.SetGoalValue(AutonomousCharacter.BE_QUICK_GOAL,
                 worldModel.GetGoalValue(AutonomousCharacter.BE_QUICK_GOAL) + 5);
             
-            float hp = (float)worldModel.GetProperty(Properties.HP);
-            if (hp + 2 <= (float) worldModel.GetProperty(Properties.MAXHP))
+            int hp = (int)worldModel.GetProperty(Properties.HP);
+            if (hp + 2 <= (int) worldModel.GetProperty(Properties.MAXHP))
             {
                 worldModel.SetProperty(Properties.HP, hp + 2);
             }

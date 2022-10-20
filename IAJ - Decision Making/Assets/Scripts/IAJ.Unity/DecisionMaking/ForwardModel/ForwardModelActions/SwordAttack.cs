@@ -117,6 +117,9 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
             worldModel.SetProperty(Properties.ShieldHP, remainingShield);
             var surviveValue = worldModel.GetGoalValue(AutonomousCharacter.SURVIVE_GOAL);
             worldModel.SetGoalValue(AutonomousCharacter.SURVIVE_GOAL, surviveValue + remainingDamage);
+            
+            var gainLevelValue = worldModel.GetGoalValue(AutonomousCharacter.GAIN_LEVEL_GOAL);
+            worldModel.SetGoalValue(AutonomousCharacter.GAIN_LEVEL_GOAL, gainLevelValue - xpChange);
 
 
             //calculate Hit
