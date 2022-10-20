@@ -22,7 +22,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
 
             if (goal.Name == AutonomousCharacter.BE_QUICK_GOAL)
             {
-                change -= goal.ChangeRate / 2 * this._durationTicks;
+                change -= (goal.ChangeRate / 2) * this._durationTicks;
             }
             return change;
         }

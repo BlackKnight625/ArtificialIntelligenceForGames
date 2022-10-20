@@ -408,7 +408,7 @@ public class AutonomousCharacter : NPC
             }
 
             this.BestActionSequence.text = "Best Action Sequence: " + actionText;
-            this.BestActionText.text = "Best Action: " + this.CurrentAction.Name;
+            this.BestActionText.text = "Best Action: " + this.CurrentAction?.Name;
         }
     }
 

@@ -153,7 +153,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
             {
                 return 0.0f;
             }
-            if ((int)(GetProperty(Game.Properties.MONEY)) > 25)
+            if ((int)(GetProperty(Game.Properties.MONEY)) >= 25)
             {
                 return 1.0f;
             }
@@ -163,9 +163,9 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
             }
             
             //A fazer decidir weights
-            return 0.5f * (((float) (int)GetProperty(Game.Properties.HP)) / (int)GetProperty(Game.Properties.MAXHP))
+            return 0.35f * (((float) (int)GetProperty(Game.Properties.HP)) / (int)GetProperty(Game.Properties.MAXHP))
                 + 0.3f * ((int)GetProperty(Game.Properties.MONEY) / 25.0f)
-                + 0.2f * (1 - ((float)GetProperty(Game.Properties.TIME) / 200.0f));
+                + 0.3f * (1 - ((float)GetProperty(Game.Properties.TIME) / 200.0f));
         }
 
         public virtual int GetNextPlayer()
