@@ -44,17 +44,24 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         {
             base.ApplyActionEffects(worldModel);
             int health = (int) worldModel.GetProperty(Properties.HP);
-            int gainedHealth = (int) GetHValue(worldModel);
+            float gainedHealth = this.GetGainedHeath(worldModel);
+            
+            worldModel.SetGoalValue(AutonomousCharacter.SURVIVE_GOAL,
+                worldModel.GetGoalValue(AutonomousCharacter.SURVIVE_GOAL) - gainedHealth);
             worldModel.SetProperty(Properties.HP, (int)(health + gainedHealth));
 
             //disables the target object so that it can't be reused again
             worldModel.SetProperty(this.Target.name, false);
         }
 
+        public float GetGainedHeath(WorldModel worldModel)
+        {
+            return (float)worldModel.GetProperty(Properties.MAXHP) - (float)worldModel.GetProperty(Properties.HP);
+        }
+
         public override float GetHValue(WorldModel worldModel)
         {
-            //TODO implement
-            return 0.0f;
+            return this.GetGainedHeath(worldModel);
         }
     }
 }

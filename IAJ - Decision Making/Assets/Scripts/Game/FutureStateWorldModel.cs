@@ -37,21 +37,6 @@ namespace Assets.Scripts.Game
             return HP <= 0 ||  time >= 200 || (this.NextPlayer == 0 && money == 25);
         }
 
-        public override float GetScore()
-        {
-            int money = (int)this.GetProperty(Properties.MONEY);
-            int HP = (int)this.GetProperty(Properties.HP);
-
-            // TODO : Should Time be taken into accoun?
-
-            if (HP <= 0) return 0.0f;
-            else if (money == 25)
-            {
-                return 1.0f;
-            }
-            else return 0.0f;
-        }
-
         public override int GetNextPlayer()
         {
             return this.NextPlayer;

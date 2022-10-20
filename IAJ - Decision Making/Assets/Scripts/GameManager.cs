@@ -336,6 +336,20 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void Pray()
+    {
+        this.Character.baseStats.HP += 2;
+        if (this.Character.baseStats.HP > this.Character.baseStats.MaxHP)
+        {
+            this.Character.baseStats.HP = this.Character.baseStats.MaxHP;
+        }
+    }
+    
+    public void SpeedUp()
+    {
+        this.Character.baseStats.Mana -= 5;
+        this.Character.Speed *= 2;
+    }
 
     private bool CheckRange(GameObject obj, float maximumSqrDistance)
     {
