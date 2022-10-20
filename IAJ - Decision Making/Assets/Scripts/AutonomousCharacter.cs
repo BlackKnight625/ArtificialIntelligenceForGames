@@ -68,6 +68,7 @@ public class AutonomousCharacter : NPC
     private int previousLevel = 1;
     public TextMesh playerText;
     private GameObject closestObject;
+    private AudioSource _praySound;
 
     // Draw path settings
     private LineRenderer lineRenderer;
@@ -76,8 +77,9 @@ public class AutonomousCharacter : NPC
     {
     }
 
-    public void Start()
-    {
+    public void Start() {
+        _praySound = GetComponent<AudioSource>();
+        
         //This is the actual speed of the agent
         lineRenderer = this.GetComponent<LineRenderer>();
         playerText.text = "";
@@ -522,6 +524,10 @@ public class AutonomousCharacter : NPC
         x *= 10;
 
         return x;
+    }
+
+    public void playPraySound() {
+        _praySound.Play();
     }
 
 }
