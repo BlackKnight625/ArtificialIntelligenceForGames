@@ -74,18 +74,20 @@ namespace Assets.Scripts.Game.NPCs
                 // Playing a sound
                 scream.Play();
 
-                StartCoroutine(screamRoutine());
+                GameManager.Instance.StartCoroutine(screamRoutine());
             }
         }
 
         private IEnumerator screamRoutine() {
             // Making the orc change size and change color
             while (_currentChanges < maxChanges) {
-                transform.localScale += growthPerTick * _growing;
-                orcRenderer.material.color += new Color(redPerTick * _growing, 0, 0);
+                if (this != null) {
+                    transform.localScale += growthPerTick * _growing;
+                    orcRenderer.material.color += new Color(redPerTick * _growing, 0, 0);
+                }
                 
                 _currentChangeTick++;
-            
+
                 if (_currentChangeTick % changeTicks == 0) {
                     // Flipping the growth/coloring
                     _growing *= -1;
@@ -95,7 +97,7 @@ namespace Assets.Scripts.Game.NPCs
                         _currentChanges++;
                     }
                 }
-            
+                
                 yield return new WaitForFixedUpdate();
             }
 
