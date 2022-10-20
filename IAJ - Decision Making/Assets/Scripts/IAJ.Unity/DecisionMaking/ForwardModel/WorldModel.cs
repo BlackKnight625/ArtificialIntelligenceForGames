@@ -157,14 +157,14 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
             {
                 return 1.0f;
             }
-            if ((int)(this.GetProperty(Game.Properties.TIME)) >= 200)
+            if ((float)(this.GetProperty(Game.Properties.TIME)) >= 200)
             {
                 return 0.0f;
             }
             
             //A fazer decidir weights
-            return 0.5f * ((float)GetProperty(Game.Properties.HP) / (float)GetProperty(Game.Properties.MAXHP))
-                + 0.3f * ((float)GetProperty(Game.Properties.MONEY) / 25.0f)
+            return 0.5f * (((float) (int)GetProperty(Game.Properties.HP)) / (int)GetProperty(Game.Properties.MAXHP))
+                + 0.3f * ((int)GetProperty(Game.Properties.MONEY) / 25.0f)
                 + 0.2f * (1 - ((float)GetProperty(Game.Properties.TIME) / 200.0f));
         }
 

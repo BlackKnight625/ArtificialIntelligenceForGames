@@ -197,7 +197,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
             MCTSNode bestNode = node.ChildNodes[0];
             foreach (MCTSNode child in node.ChildNodes)
             {
-                if (child.State.GetScore() > bestNode.State.GetScore())
+                if (child.Q > bestNode.Q)
                 {
                     bestNode = child;
                 }

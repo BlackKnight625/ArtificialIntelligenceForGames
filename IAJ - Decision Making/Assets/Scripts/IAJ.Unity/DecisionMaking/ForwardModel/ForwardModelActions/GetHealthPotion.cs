@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Game;
+﻿using System;
+using Assets.Scripts.Game;
 using Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel;
 using UnityEngine;
 
@@ -44,19 +45,19 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         {
             base.ApplyActionEffects(worldModel);
             int health = (int) worldModel.GetProperty(Properties.HP);
-            float gainedHealth = this.GetGainedHeath(worldModel);
             
+            int gainedHealth = this.GetGainedHeath(worldModel);
             worldModel.SetGoalValue(AutonomousCharacter.SURVIVE_GOAL,
                 worldModel.GetGoalValue(AutonomousCharacter.SURVIVE_GOAL) - gainedHealth);
-            worldModel.SetProperty(Properties.HP, (int)(health + gainedHealth));
+            worldModel.SetProperty(Properties.HP, health + gainedHealth);
 
-            //disables the target object so that it can't be reused again
+                //disables the target object so that it can't be reused again
             worldModel.SetProperty(this.Target.name, false);
         }
 
-        public float GetGainedHeath(WorldModel worldModel)
+        public int GetGainedHeath(WorldModel worldModel)
         {
-            return (float)worldModel.GetProperty(Properties.MAXHP) - (float)worldModel.GetProperty(Properties.HP);
+            return (int)worldModel.GetProperty(Properties.MAXHP) - (int)worldModel.GetProperty(Properties.HP);
         }
 
         public override float GetHValue(WorldModel worldModel)
