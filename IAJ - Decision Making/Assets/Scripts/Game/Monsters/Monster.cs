@@ -50,7 +50,6 @@ namespace Assets.Scripts.Game.NPCs
 
             if (usingBehaviourTree)
                 InitializeBehaviourTree();
-
         }
 
         public virtual void InitializeBehaviourTree()
