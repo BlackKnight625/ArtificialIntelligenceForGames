@@ -23,7 +23,7 @@ namespace Assets.Scripts.Game
             }
         }
 
-        public FutureStateWorldModel(GameManager gameManager, List<Action> actions) : base(actions)
+        public FutureStateWorldModel(GameManager gameManager, Action[] actions) : base(actions)
         {
             this.GameManager = gameManager;
             this.NextPlayer = 0;

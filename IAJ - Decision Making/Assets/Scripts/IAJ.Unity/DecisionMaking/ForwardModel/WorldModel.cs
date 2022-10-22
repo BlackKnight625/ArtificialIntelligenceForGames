@@ -12,7 +12,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
         private List<Action> _executableActions;
         private IEnumerator<Action> _executableActionEnumerator;
         
-        private List<Action> Actions { get; set; }
+        private Action[] Actions { get; set; }
         protected List<Action> ExecutableActions => _executableActions ??= FindExecutableActions();
 
         protected IEnumerator<Action> ExecutableActionEnumerator => _executableActionEnumerator ??= ExecutableActions.GetEnumerator();
@@ -25,10 +25,10 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
         
         public virtual int ExecutableActionsSize => ExecutableActions.Count;
 
-        public WorldModel(List<Action> actions)
+        public WorldModel(Action[] actions)
         {
             this.GoalValues = new Dictionary<string, float>();
-            this.Actions = new List<Action>(actions);
+            this.Actions = actions.CreateCopy();
             this.Actions.Shuffle();
 
             PropertyStorage = new PropertyStorage();
@@ -37,7 +37,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
         public WorldModel(WorldModel parent)
         {
             this.GoalValues = new Dictionary<string, float>();
-            this.Actions = new List<Action>(parent.Actions);
+            this.Actions = parent.Actions.CreateCopy();
             this.Actions.Shuffle();
             this.Parent = parent;
 

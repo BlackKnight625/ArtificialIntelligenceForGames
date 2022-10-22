@@ -10,7 +10,7 @@ namespace Assets.Scripts.Game
     {
         private Dictionary<string, Goal> Goals { get; set; }
 
-        public CurrentStateWorldModel(GameManager gameManager, List<Action> actions, List<Goal> goals) : base(gameManager, actions)
+        public CurrentStateWorldModel(GameManager gameManager, List<Action> actions, List<Goal> goals) : base(gameManager, actions.ToArray())
         {
             this.Parent = null;
             this.Goals = new Dictionary<string, Goal>();

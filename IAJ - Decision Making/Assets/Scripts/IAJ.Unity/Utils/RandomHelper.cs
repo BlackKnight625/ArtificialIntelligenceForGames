@@ -52,5 +52,15 @@ namespace Assets.Scripts.IAJ.Unity.Utils
                 list[n] = value;
             }
         }
+        
+        public static void Shuffle<T>(this T[] array) {
+            int n = array.Length;
+            while (n > 1)
+            {
+                n--;
+                int k = Random.Range(1, n + 1);
+                (array[k], array[n]) = (array[n], array[k]);
+            }
+        }
     }
 }
