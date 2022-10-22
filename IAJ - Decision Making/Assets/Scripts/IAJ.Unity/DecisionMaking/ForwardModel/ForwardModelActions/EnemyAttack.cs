@@ -10,7 +10,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
     public class EnemyAttack : SwordAttack
     {
 
-        public EnemyAttack(AutonomousCharacter character, GameObject target) : base(character, target)
+        public EnemyAttack(AutonomousCharacter character, Disposable target) : base(character, target)
         {
             this.Name = "EnemyAttack(" + target.name + ")";
         }
@@ -18,7 +18,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         public override void Execute()
         {
             base.Execute();
-            GameManager.Instance.EnemyAttack(this.Target);
+            GameManager.Instance.EnemyAttack(this.Target.gameObject);
         }
     }
 }

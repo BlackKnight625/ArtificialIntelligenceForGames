@@ -9,9 +9,9 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
     {
         protected AutonomousCharacter Character { get; set; }
 
-        public GameObject Target { get; set; }
+        public Disposable Target { get; set; }
 
-        protected WalkToTargetAndExecuteAction(string actionName, AutonomousCharacter character, GameObject target) : base(actionName + "(" + target.name + ")")
+        protected WalkToTargetAndExecuteAction(string actionName, AutonomousCharacter character, Disposable target) : base(actionName + "(" + target.name + ")")
         {
             this.Character = character;
             this.Target = target;

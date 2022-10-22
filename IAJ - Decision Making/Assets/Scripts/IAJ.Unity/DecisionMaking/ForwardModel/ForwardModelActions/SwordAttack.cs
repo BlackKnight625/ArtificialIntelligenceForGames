@@ -16,7 +16,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         //how do you like lambda's in c#?
         private Func<int> dmgRoll;
 
-        public SwordAttack(AutonomousCharacter character, GameObject target) : base("SwordAttack",character,target)
+        public SwordAttack(AutonomousCharacter character, Disposable target) : base("SwordAttack",character,target)
         {
             if (target.tag.Equals("Skeleton"))
             {
@@ -82,7 +82,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         public override void Execute()
         {
             base.Execute();
-            GameManager.Instance.SwordAttack(this.Target);
+            GameManager.Instance.SwordAttack(this.Target.gameObject);
         }
 
         public override void ApplyActionEffects(WorldModel worldModel)

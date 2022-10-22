@@ -7,7 +7,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
     public class PickUpChest : WalkToTargetAndExecuteAction
     {
 
-        public PickUpChest(AutonomousCharacter character, GameObject target) : base("PickUpChest",character,target)
+        public PickUpChest(AutonomousCharacter character, Disposable target) : base("PickUpChest",character,target)
         {
         }
 
@@ -36,7 +36,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         {
             
             base.Execute();
-            GameManager.Instance.PickUpChest(this.Target);
+            GameManager.Instance.PickUpChest(this.Target.gameObject);
         }
 
         public override void ApplyActionEffects(WorldModel worldModel)

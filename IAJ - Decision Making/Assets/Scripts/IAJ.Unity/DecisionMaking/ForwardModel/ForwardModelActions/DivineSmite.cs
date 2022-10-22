@@ -13,7 +13,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
 
         private bool isSkeleton = false;
 
-        public DivineSmite(AutonomousCharacter character, GameObject target) : base("DivineSmite",character,target)
+        public DivineSmite(AutonomousCharacter character, Disposable target) : base("DivineSmite",character,target)
         {
             if (target.tag.Equals("Skeleton"))
             {
@@ -43,7 +43,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         public override void Execute()
         {
             base.Execute();
-            GameManager.Instance.DivineSmite(this.Target);
+            GameManager.Instance.DivineSmite(this.Target.gameObject);
         }
         
         public override bool CanExecute()

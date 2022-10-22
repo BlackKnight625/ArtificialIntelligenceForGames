@@ -148,33 +148,33 @@ public class AutonomousCharacter : NPC
 
         foreach (var chest in GameObject.FindGameObjectsWithTag("Chest"))
         {
-            this.Actions.Add(new PickUpChest(this, chest));
+            this.Actions.Add(new PickUpChest(this, chest.GetComponent<Disposable>()));
         }
 
         foreach (var potion in GameObject.FindGameObjectsWithTag("ManaPotion"))
         {
-            this.Actions.Add(new GetManaPotion(this, potion));
+            this.Actions.Add(new GetManaPotion(this, potion.GetComponent<Disposable>()));
         }
 
         foreach (var potion in GameObject.FindGameObjectsWithTag("HealthPotion"))
         {
-            this.Actions.Add(new GetHealthPotion(this, potion));
+            this.Actions.Add(new GetHealthPotion(this, potion.GetComponent<Disposable>()));
         }
 
         foreach (var enemy in GameObject.FindGameObjectsWithTag("Skeleton"))
         {
-            this.Actions.Add(new SwordAttack(this, enemy));
-            this.Actions.Add(new DivineSmite(this, enemy));
+            this.Actions.Add(new SwordAttack(this, enemy.GetComponent<Disposable>()));
+            this.Actions.Add(new DivineSmite(this, enemy.GetComponent<Disposable>()));
         }
 
         foreach (var enemy in GameObject.FindGameObjectsWithTag("Orc"))
         {
-            this.Actions.Add(new SwordAttack(this, enemy));
+            this.Actions.Add(new SwordAttack(this, enemy.GetComponent<Disposable>()));
         }
 
         foreach (var enemy in GameObject.FindGameObjectsWithTag("Dragon"))
         {
-            this.Actions.Add(new SwordAttack(this, enemy));
+            this.Actions.Add(new SwordAttack(this, enemy.GetComponent<Disposable>()));
         }
 
         StartCoroutine(InitDecisionAlgorithms());
