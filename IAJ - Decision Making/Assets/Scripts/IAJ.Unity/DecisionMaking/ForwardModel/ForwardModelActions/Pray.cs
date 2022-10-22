@@ -25,7 +25,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
             }
             if (goal.Name == AutonomousCharacter.BE_QUICK_GOAL)
             {
-                change += 5;
+                change += 0.1f * AutonomousCharacter.RESTING_INTERVAL_TICKS;
             }
             return change;
         }
