@@ -89,9 +89,9 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         {
             base.ApplyActionEffects(worldModel);
 
-            int hp = (int)worldModel.GetProperty(Properties.HP);
-            int shieldHp = (int)worldModel.GetProperty(Properties.ShieldHP);
-            int xp = (int)worldModel.GetProperty(Properties.XP);
+            int hp = worldModel.GetProperty(PropertyKeys.HP);
+            int shieldHp = worldModel.GetProperty(PropertyKeys.ShieldHP);
+            int xp = worldModel.GetProperty(PropertyKeys.XP);
 
             int damage = 0;
             if (GameManager.Instance.StochasticWorld)
@@ -111,10 +111,10 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
             if(remainingDamage > 0)
             {
                 remainingHP = (hp - remainingDamage);
-                worldModel.SetProperty(Properties.HP, remainingHP);
+                worldModel.SetProperty(PropertyKeys.HP, remainingHP);
             }
 
-            worldModel.SetProperty(Properties.ShieldHP, remainingShield);
+            worldModel.SetProperty(PropertyKeys.ShieldHP, remainingShield);
             var surviveValue = worldModel.GetGoalValue(AutonomousCharacter.SURVIVE_GOAL);
             worldModel.SetGoalValue(AutonomousCharacter.SURVIVE_GOAL, surviveValue + remainingDamage);
             
@@ -130,8 +130,8 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
             {
                 //there was an hit, enemy is destroyed, gain xp
                 //disables the target object so that it can't be reused again
-                worldModel.SetProperty(this.Target.name, false);
-                worldModel.SetProperty(Properties.XP, xp + this.xpChange);
+                worldModel.SetProperty(this.Target, false);
+                worldModel.SetProperty(PropertyKeys.XP, xp + this.xpChange);
             }
         }
 

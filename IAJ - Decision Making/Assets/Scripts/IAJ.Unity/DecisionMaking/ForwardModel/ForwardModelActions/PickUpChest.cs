@@ -46,11 +46,11 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
             var goalValue = worldModel.GetGoalValue(AutonomousCharacter.GET_RICH_GOAL);
             worldModel.SetGoalValue(AutonomousCharacter.GET_RICH_GOAL, goalValue - 5.0f);
 
-            var money = (int)worldModel.GetProperty(Properties.MONEY);
-            worldModel.SetProperty(Properties.MONEY, money + 5);
+            var money = worldModel.GetProperty(PropertyKeys.MONEY);
+            worldModel.SetProperty(PropertyKeys.MONEY, money + 5);
 
             //disables the target object so that it can't be reused again
-            worldModel.SetProperty(this.Target.name, false);
+            worldModel.SetProperty(this.Target, false);
         }
 
         public override float GetHValue(WorldModel worldModel)

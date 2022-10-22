@@ -20,7 +20,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         public override bool CanExecute(WorldModel worldModel)
         {
             if (!base.CanExecute(worldModel)) return false;
-            return (int)(worldModel.GetProperty(Properties.HP)) < (int)(worldModel.GetProperty(Properties.MAXHP));
+            return worldModel.GetProperty(PropertyKeys.HP) < worldModel.GetProperty(PropertyKeys.MAXHP);
         }
 
         public override void Execute()
@@ -44,20 +44,20 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         public override void ApplyActionEffects(WorldModel worldModel)
         {
             base.ApplyActionEffects(worldModel);
-            int health = (int) worldModel.GetProperty(Properties.HP);
+            int health = worldModel.GetProperty(PropertyKeys.HP);
             
             int gainedHealth = this.GetGainedHeath(worldModel);
             worldModel.SetGoalValue(AutonomousCharacter.SURVIVE_GOAL,
                 worldModel.GetGoalValue(AutonomousCharacter.SURVIVE_GOAL) - gainedHealth);
-            worldModel.SetProperty(Properties.HP, health + gainedHealth);
+            worldModel.SetProperty(PropertyKeys.HP, health + gainedHealth);
 
                 //disables the target object so that it can't be reused again
-            worldModel.SetProperty(this.Target.name, false);
+            worldModel.SetProperty(this.Target, false);
         }
 
         public int GetGainedHeath(WorldModel worldModel)
         {
-            return (int)worldModel.GetProperty(Properties.MAXHP) - (int)worldModel.GetProperty(Properties.HP);
+            return worldModel.GetProperty(PropertyKeys.MAXHP) - worldModel.GetProperty(PropertyKeys.HP);
         }
 
         public override float GetHValue(WorldModel worldModel)

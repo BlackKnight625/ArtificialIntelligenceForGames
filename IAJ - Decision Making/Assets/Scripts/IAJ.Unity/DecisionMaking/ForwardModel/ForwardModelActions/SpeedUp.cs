@@ -34,7 +34,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         
         public override bool CanExecute(WorldModel worldModel)
         {
-            return base.CanExecute() && (int)worldModel.GetProperty(Properties.MANA) >= _manaCost;
+            return base.CanExecute() && worldModel.GetProperty(PropertyKeys.MANA) >= _manaCost;
         }
 
         public override void Execute()
@@ -53,7 +53,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
             worldModel.SetGoalValue(AutonomousCharacter.BE_QUICK_GOAL,
                 worldModel.GetGoalValue(AutonomousCharacter.BE_QUICK_GOAL) -
                     AutonomousCharacter.SPEEDUP_INTERVAL_TICKS / 2f * 50); // Amount of seconds saved walking
-            worldModel.SetProperty(Properties.MANA, (int) worldModel.GetProperty(Properties.MANA) - _manaCost);
+            worldModel.SetProperty(PropertyKeys.MANA, worldModel.GetProperty(PropertyKeys.MANA) - _manaCost);
         }
 
         public override float GetHValue(WorldModel worldModel) {

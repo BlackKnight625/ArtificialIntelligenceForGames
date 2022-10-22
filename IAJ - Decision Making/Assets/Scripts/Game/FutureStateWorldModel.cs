@@ -41,9 +41,9 @@ namespace Assets.Scripts.Game
 
         public override bool IsTerminal()
         {
-            int HP = (int)this.GetProperty(Properties.HP);
-            float time = (float)this.GetProperty(Properties.TIME);
-            int money = (int)this.GetProperty(Properties.MONEY);
+            int HP = GetProperty(PropertyKeys.HP);
+            float time = GetProperty(PropertyKeys.TIME);
+            int money = GetProperty(PropertyKeys.MONEY);
 
             return HP <= 0 ||  time >= 200 || (this.NextPlayer == 0 && money == 25);
         }
@@ -55,13 +55,13 @@ namespace Assets.Scripts.Game
 
         public override void CalculateNextPlayer()
         {
-            Vector3 position = (Vector3)this.GetProperty(Properties.POSITION);
+            Vector3 position = GetProperty(PropertyKeys.POSITION);
             bool enemyEnabled;
 
             //basically if the character is close enough to an enemy, the next player will be the enemy.
             foreach (var enemy in this.GameManager.enemies)
             {
-                enemyEnabled = (bool) this.GetProperty(enemy.name);
+                enemyEnabled = GetProperty(enemy);
                 if (enemyEnabled && (enemy.transform.position - position).sqrMagnitude <= 100)
                 {
                     this.NextPlayer = 1;

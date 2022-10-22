@@ -26,8 +26,8 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         
         public override bool CanExecute(WorldModel worldModel)
         {            
-            if (!base.CanExecute(worldModel) || (int)(worldModel.GetProperty(Properties.MANA)) < 5
-                                             || (int)(worldModel.GetProperty(Properties.ShieldHP)) >= 5)
+            if (!base.CanExecute(worldModel) || worldModel.GetProperty(PropertyKeys.MANA) < 5
+                                             || worldModel.GetProperty(PropertyKeys.ShieldHP) >= 5)
                 return false;
             return true;
         }
@@ -36,12 +36,12 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         {
             base.ApplyActionEffects(worldModel);
             
-            worldModel.SetProperty(Properties.ShieldHP, 5);
-            worldModel.SetProperty(Properties.MANA, (int) worldModel.GetProperty(Properties.MANA) - 5);
+            worldModel.SetProperty(PropertyKeys.ShieldHP, 5);
+            worldModel.SetProperty(PropertyKeys.MANA, worldModel.GetProperty(PropertyKeys.MANA) - 5);
             
             worldModel.SetGoalValue(AutonomousCharacter.SURVIVE_GOAL, 
                 worldModel.GetGoalValue(AutonomousCharacter.SURVIVE_GOAL) +
-                (int) worldModel.GetProperty(Properties.ShieldHP) - 5);
+                worldModel.GetProperty(PropertyKeys.ShieldHP) - 5);
         }
         
         public override float GetGoalChange(Goal goal)

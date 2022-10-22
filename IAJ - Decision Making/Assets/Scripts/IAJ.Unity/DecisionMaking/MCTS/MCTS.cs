@@ -96,7 +96,6 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
         // Selection and Expantion
         protected MCTSNode Selection(MCTSNode initialNode)
         {
-            Action nextAction;
             MCTSNode currentNode = initialNode;
             while (!currentNode.State.IsTerminal())
             {

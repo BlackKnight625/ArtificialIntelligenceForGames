@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Assets.Scripts.Game;
 using Assets.Scripts.Game.NPCs;
+using Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel;
 using Object = UnityEngine.Object;
 
 public class GameManager : MonoBehaviour
@@ -62,6 +63,9 @@ public class GameManager : MonoBehaviour
         this.Character = GameObject.FindGameObjectWithTag("Player").GetComponent<AutonomousCharacter>();
 
         this.initialPosition = this.Character.gameObject.transform.position;
+        
+        // Forcing this class to be loaded
+        PropertyKeys.Load();
     }
 
     public void UpdateDisposableObjects()
@@ -203,8 +207,6 @@ public class GameManager : MonoBehaviour
     
     public void DivineSmite(GameObject enemy)
     {
-        int damage = 0;
-
         Monster.EnemyStats enemyData = enemy.GetComponent<Monster>().enemyStats;
 
         if (enemy != null && enemy.activeSelf && InMeleeRange(enemy))

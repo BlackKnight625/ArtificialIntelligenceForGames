@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Game;
+using Assets.Scripts.Game.NPCs;
 using UnityEngine;
 using Assets.Scripts.IAJ.Unity.Utils;
 
@@ -10,13 +12,14 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
         private List<Action> _executableActions;
         private IEnumerator<Action> _executableActionEnumerator;
         
-        private Dictionary<string, object> Properties { get; set; }
         private List<Action> Actions { get; set; }
         protected List<Action> ExecutableActions => _executableActions ??= FindExecutableActions();
 
         protected IEnumerator<Action> ExecutableActionEnumerator => _executableActionEnumerator ??= ExecutableActions.GetEnumerator();
 
-        private Dictionary<string, float> GoalValues { get; set; } 
+        private Dictionary<string, float> GoalValues { get; set; }
+
+        public PropertyStorage PropertyStorage { get; }
 
         protected WorldModel Parent { get; set; }
         
@@ -24,41 +27,45 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
 
         public WorldModel(List<Action> actions)
         {
-            this.Properties = new Dictionary<string, object>();
             this.GoalValues = new Dictionary<string, float>();
             this.Actions = new List<Action>(actions);
             this.Actions.Shuffle();
+
+            PropertyStorage = new PropertyStorage();
         }
 
         public WorldModel(WorldModel parent)
         {
-            this.Properties = new Dictionary<string, object>();
             this.GoalValues = new Dictionary<string, float>();
             this.Actions = new List<Action>(parent.Actions);
             this.Actions.Shuffle();
             this.Parent = parent;
+
+            PropertyStorage = parent.PropertyStorage.GetChildStorage();
         }
 
-        public virtual object GetProperty(string propertyName)
-        {
-            //recursive implementation of WorldModel
-            if (this.Properties.ContainsKey(propertyName))
-            {
-                return this.Properties[propertyName];
-            }
-            else if (this.Parent != null)
-            {
-                return this.Parent.GetProperty(propertyName);
-            }
-            else
-            {
-                return null;
-            }
+        public T GetProperty<T>(PropertyKey<T> key) {
+            return PropertyStorage.GetProperty(key);
         }
 
-        public virtual void SetProperty(string propertyName, object value)
-        {
-            this.Properties[propertyName] = value;
+        public bool GetProperty(Disposable disposable) {
+            return GetProperty(disposable.ExistsKey);
+        }
+
+        public bool GetProperty(GameObject gameObject) {
+            return GetProperty(gameObject.GetComponent<Disposable>());
+        }
+
+        public void SetProperty<T>(PropertyKey<T> key, T newValue) {
+            PropertyStorage.SetProperty(key, newValue);
+        }
+
+        public void SetProperty(Disposable disposable, bool newValue) {
+            SetProperty(disposable.ExistsKey, newValue);
+        }
+
+        public void SetProperty(GameObject gameObject, bool newValue) {
+            SetProperty(gameObject.GetComponent<Disposable>(), newValue);
         }
 
         public virtual float GetGoalValue(string goalName)
@@ -131,15 +138,15 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
 
         public virtual bool IsTerminal()
         {
-            if((int) (this.GetProperty("HP")) <= 0)
+            if(this.GetProperty(PropertyKeys.HP) <= 0)
             {
                 return true;
             }
-            if ((int)(this.GetProperty("MONEY")) > 25)
+            if (this.GetProperty(PropertyKeys.MONEY) > 25)
             {
                 return true;
             }
-            if ((int)(this.GetProperty("TIME")) >= 200)
+            if (this.GetProperty(PropertyKeys.TIME) >= 200)
             {
                 return true;
             }
@@ -149,23 +156,23 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel
 
         public virtual float GetScore()
         {
-            if ((int)(GetProperty(Game.Properties.HP)) <= 0)
+            if (GetProperty(PropertyKeys.HP) <= 0)
             {
                 return 0.0f;
             }
-            if ((int)(GetProperty(Game.Properties.MONEY)) >= 25)
+            if (GetProperty(PropertyKeys.MONEY) >= 25)
             {
                 return 1.0f;
             }
-            if ((float)(this.GetProperty(Game.Properties.TIME)) >= 200)
+            if (GetProperty(PropertyKeys.TIME) >= 200)
             {
                 return 0.0f;
             }
             
             //A fazer decidir weights
-            return 0.35f * (((float) (int)GetProperty(Game.Properties.HP)) / (int)GetProperty(Game.Properties.MAXHP))
-                + 0.3f * ((int)GetProperty(Game.Properties.MONEY) / 25.0f)
-                + 0.3f * (1 - ((float)GetProperty(Game.Properties.TIME) / 200.0f));
+            return 0.35f * (((float) GetProperty(PropertyKeys.HP)) / GetProperty(PropertyKeys.MAXHP))
+                + 0.3f * (GetProperty(PropertyKeys.MONEY) / 25.0f)
+                + 0.3f * (1 - (GetProperty(PropertyKeys.TIME) / 200.0f));
         }
 
         public virtual int GetNextPlayer()

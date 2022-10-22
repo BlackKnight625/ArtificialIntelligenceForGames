@@ -79,7 +79,7 @@ namespace Assets.Scripts.Game
             try {
                 return _cache[cacheKey];
             }
-            catch (KeyNotFoundException e) {
+            catch (KeyNotFoundException) {
                 // Cache does not contain result for the given input
                 var distance = 0.0f;
 

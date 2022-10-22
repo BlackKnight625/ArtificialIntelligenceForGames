@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -177,6 +178,14 @@ public class AutonomousCharacter : NPC
             this.Actions.Add(new SwordAttack(this, enemy));
         }
 
+        StartCoroutine(InitDecisionAlgorithms());
+        
+        this.Resting = false;
+
+        DiaryText.text += "My Diary \n I awoke. What a wonderful day to kill Monsters! \n";
+    }
+
+    private IEnumerator InitDecisionAlgorithms() {
         // Initialization of Decision Making Algorithms
         MCTSPlayoutActionChooser mctsPlayoutActionChooser;
         
@@ -194,10 +203,9 @@ public class AutonomousCharacter : NPC
         this.GOBDecisionMaking = new GOBDecisionMaking(this.Actions, this.Goals);
         this.GOAPDecisionMaking = new DepthLimitedGOAPDecisionMaking(worldModel, this.Actions, this.Goals);
         this.MCTS = new MCTS(worldModel, mctsPlayoutActionChooser);
-        this.Resting = false;
 
-        DiaryText.text += "My Diary \n I awoke. What a wonderful day to kill Monsters! \n";
-    }
+        yield return null;
+    } 
 
     void FixedUpdate()
     {

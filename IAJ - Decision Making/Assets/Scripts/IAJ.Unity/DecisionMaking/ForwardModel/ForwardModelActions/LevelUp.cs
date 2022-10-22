@@ -24,8 +24,8 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
 
         public override bool CanExecute(WorldModel worldModel)
         {
-            int xp = (int)worldModel.GetProperty(Properties.XP);
-            int level = (int)worldModel.GetProperty(Properties.LEVEL);
+            int xp = worldModel.GetProperty(PropertyKeys.XP);
+            int level = worldModel.GetProperty(PropertyKeys.LEVEL);
 
             return xp >= level * 10;
         }
@@ -37,12 +37,12 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
 
         public override void ApplyActionEffects(WorldModel worldModel)
         {
-            int maxHP = (int)worldModel.GetProperty(Properties.MAXHP);
-            int level = (int)worldModel.GetProperty(Properties.LEVEL);
+            int maxHP = worldModel.GetProperty(PropertyKeys.MAXHP);
+            int level = worldModel.GetProperty(PropertyKeys.LEVEL);
 
-            worldModel.SetProperty(Properties.LEVEL, level + 1);
-            worldModel.SetProperty(Properties.MAXHP, maxHP + 10);
-            worldModel.SetProperty(Properties.XP, (int)0);
+            worldModel.SetProperty(PropertyKeys.LEVEL, level + 1);
+            worldModel.SetProperty(PropertyKeys.MAXHP, maxHP + 10);
+            worldModel.SetProperty(PropertyKeys.XP, 0);
             worldModel.SetGoalValue(AutonomousCharacter.GAIN_LEVEL_GOAL, 0);
         }
 

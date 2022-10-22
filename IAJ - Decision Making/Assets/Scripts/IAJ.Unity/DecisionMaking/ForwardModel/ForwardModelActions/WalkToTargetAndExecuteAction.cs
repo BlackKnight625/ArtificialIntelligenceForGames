@@ -24,7 +24,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
 
         public override float GetDuration(WorldModel worldModel)
         {
-            var position = (Vector3)worldModel.GetProperty(Properties.POSITION);
+            var position = worldModel.GetProperty(PropertyKeys.POSITION);
             return this.GetDuration(position);
         }
 
@@ -52,7 +52,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         public override bool CanExecute(WorldModel worldModel)
         {
             if (this.Target == null) return false;
-            var targetEnabled = (bool)worldModel.GetProperty(this.Target.name);
+            var targetEnabled = worldModel.GetProperty(this.Target);
             return targetEnabled;
         }
 
@@ -72,10 +72,10 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
             var quicknessValue = worldModel.GetGoalValue(AutonomousCharacter.BE_QUICK_GOAL);
             worldModel.SetGoalValue(AutonomousCharacter.BE_QUICK_GOAL, quicknessValue + duration * 0.1f);
 
-            var time = (float)worldModel.GetProperty(Properties.TIME);
-            worldModel.SetProperty(Properties.TIME, time + duration);
+            var time = worldModel.GetProperty(PropertyKeys.TIME);
+            worldModel.SetProperty(PropertyKeys.TIME, time + duration);
 
-            worldModel.SetProperty(Properties.POSITION, Target.transform.position);
+            worldModel.SetProperty(PropertyKeys.POSITION, Target.transform.position);
         }
 
         private float getDistance(Vector3 currentPosition, Vector3 targetPosition)

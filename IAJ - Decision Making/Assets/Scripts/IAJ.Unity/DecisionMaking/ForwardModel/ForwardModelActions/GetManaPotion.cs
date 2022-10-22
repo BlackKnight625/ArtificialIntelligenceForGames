@@ -19,7 +19,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         public override bool CanExecute(WorldModel worldModel)
         {
             if (!base.CanExecute()) return false;
-            return (int) worldModel.GetProperty(Properties.MANA) < 10;
+            return worldModel.GetProperty(PropertyKeys.MANA) < 10;
         }
         
         public override void Execute()
@@ -37,15 +37,15 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         public override void ApplyActionEffects(WorldModel worldModel)
         {
             base.ApplyActionEffects(worldModel);
-            int mana = (int) worldModel.GetProperty(Properties.MANA);
+            int mana = worldModel.GetProperty(PropertyKeys.MANA);
             int gainedMana = getGainedMana(worldModel);
-            worldModel.SetProperty(Properties.MANA, (mana + gainedMana));
+            worldModel.SetProperty(PropertyKeys.MANA,  (mana + gainedMana));
             //disables the target object so that it can't be reused again
-            worldModel.SetProperty(this.Target.name, false);
+            worldModel.SetProperty(this.Target, false);
         }
 
         public int getGainedMana(WorldModel worldModel) {
-            return 10 - (int) worldModel.GetProperty(Properties.MANA);
+            return 10 - worldModel.GetProperty(PropertyKeys.MANA);
         }
         
         public override float GetHValue(WorldModel worldModel) {

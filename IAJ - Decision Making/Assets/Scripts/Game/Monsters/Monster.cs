@@ -7,6 +7,7 @@ using Assets.Scripts.IAJ.Unity.DecisionMaking.BehaviorTree;
 using Assets.Scripts.IAJ.Unity.DecisionMaking.BehaviorTree.BehaviourTrees;
 using Assets.Scripts.IAJ.Unity.Formations;
 using System.Collections.Generic;
+using Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel;
 
 namespace Assets.Scripts.Game.NPCs
 {
@@ -37,7 +38,6 @@ namespace Assets.Scripts.Game.NPCs
 
         private FormationManager formationManager;
         public bool usingFormation;
-
 
         public virtual void Start()
         {
@@ -112,8 +112,5 @@ namespace Assets.Scripts.Game.NPCs
             if (agent != null)
                 this.agent.SetDestination(targetPosition);
         }
-
-       
-
      }
 }

@@ -37,8 +37,8 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
         
         public override bool CanExecute(WorldModel worldModel)
         {
-            int hp = (int)worldModel.GetProperty(Properties.HP);
-            int maxHp = (int)worldModel.GetProperty(Properties.MAXHP);
+            int hp = worldModel.GetProperty(PropertyKeys.HP);
+            int maxHp = worldModel.GetProperty(PropertyKeys.MAXHP);
             return base.CanExecute() && hp + 2 <= maxHp;
         }
 
@@ -62,16 +62,17 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel.ForwardModelActio
             worldModel.SetGoalValue(AutonomousCharacter.BE_QUICK_GOAL,
                 worldModel.GetGoalValue(AutonomousCharacter.BE_QUICK_GOAL) + 5);
             
-            int hp = (int)worldModel.GetProperty(Properties.HP);
-            if (hp + 2 <= (int) worldModel.GetProperty(Properties.MAXHP))
+            int hp = worldModel.GetProperty(PropertyKeys.HP);
+            int maxHp = worldModel.GetProperty(PropertyKeys.MAXHP);
+            if (hp + 2 <= maxHp)
             {
-                worldModel.SetProperty(Properties.HP, hp + 2);
+                worldModel.SetProperty(PropertyKeys.HP, hp + 2);
             }
             else
             {
-                worldModel.SetProperty(Properties.HP, Properties.MAXHP);
+                worldModel.SetProperty(PropertyKeys.HP, maxHp);
             }
-            worldModel.SetProperty(Properties.TIME, (float) worldModel.GetProperty(Properties.TIME) + 5);
+            worldModel.SetProperty(PropertyKeys.TIME, worldModel.GetProperty(PropertyKeys.TIME) + 5);
         }
 
         public override float GetHValue(WorldModel worldModel) {
