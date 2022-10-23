@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using Assets.Scripts.Game.NPCs;
+using Assets.Scripts.IAJ.Unity.DecisionMaking.BehaviorTree.BehaviourTrees;
+using Assets.Scripts.IAJ.Unity.Formations;
 using UnityEngine.AI;
 
 public class LevelCreator : MonoBehaviour
@@ -37,7 +39,7 @@ public class LevelCreator : MonoBehaviour
     public Transform chestSpawn;
     public Transform potionSpawn;
     public Transform patrolsSpawn;
-    
+
     // Create the grid according to the text file set in the "Assets/Resources/grid.txt"
     public  void GridMapVisual()
     {
@@ -139,12 +141,13 @@ public class LevelCreator : MonoBehaviour
                 
                 else if (letter == "f") {
                     //Formations
-                    var orc = GameObject.Instantiate(orcPrefab, monsterSpawn);
-                    orc.transform.localPosition = new Vector3(x * cellSize, 0f, y * cellSize - 0.5f);
-                    orc.transform.localScale *= cellSize;
-                    orc.name = "Orc" + orCounter;
+                    var orcObject = GameObject.Instantiate(orcPrefab, monsterSpawn);
+                    orcObject.transform.localPosition = new Vector3(x * cellSize, 0f, y * cellSize - 0.5f);
+                    orcObject.transform.localScale *= cellSize;
+                    orcObject.name = "Orc" + orCounter + " Formation";
                     orCounter++;
-
+                    
+                    orcsWithNoPatrols.Add(orcObject);
                 }
             }
         }

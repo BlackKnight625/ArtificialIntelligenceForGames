@@ -4,7 +4,7 @@ using Assets.Scripts.IAJ.Unity.DecisionMaking.BehaviorTree.EnemyTasks;
 using UnityEngine;
 
 namespace Assets.Scripts.IAJ.Unity.DecisionMaking.BehaviorTree.BehaviourTrees {
-    class OrcTree : ParallelTasks {
+    public class OrcTree : ParallelTasks {
 
         public OrcTree(Monster character, GameObject target, GameObject patrol1, GameObject patrol2) : base() {
             Interrupter interrupter = new Interrupter(

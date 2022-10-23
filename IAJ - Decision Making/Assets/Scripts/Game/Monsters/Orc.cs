@@ -124,9 +124,14 @@ namespace Assets.Scripts.Game.NPCs
         
         
 
-        public override void InitializeBehaviourTree()
-        {
-            this.BehaviourTree = new OrcTree(this, this.Target, patrol1, patrol2);
+        public override void InitializeBehaviourTree() {
+            if (GameManager.Instance.MonstersInFormation.Contains(this)) {
+                this.BehaviourTree = new OrcInFormationTree(this, Target, patrol1, patrol2,
+                    GameManager.Instance.FormationManager);
+            }
+            else {
+                this.BehaviourTree = new OrcTree(this, this.Target, patrol1, patrol2);
+            }
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.BehaviorTree.EnemyTasks
 
         public float range;
 
-        public MoveTo(Monster character, GameObject target, float _range)
+        public MoveTo(NPC character, GameObject target, float _range)
         {
             this.Character = character;
             this.Target = target;

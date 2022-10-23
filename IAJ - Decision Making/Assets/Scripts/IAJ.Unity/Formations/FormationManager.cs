@@ -9,31 +9,51 @@ namespace Assets.Scripts.IAJ.Unity.Formations
 {
     public class FormationManager
     {
-        public Dictionary<Monster, int> SlotAssignment = new Dictionary<Monster, int>();
+        public Dictionary<Monster, int> SlotAssignment = new();
 
-        private FormationPattern pattern;
+        private FormationPattern _pattern;
 
         // # A Static (i.e., position and orientation) representing the
         // # drift offset for the currently filled slots.
 
-        public Vector3 AnchorPosition;
-
-        public Vector3 Orientation;
-
+        public Anchor Anchor;
+        public GameObject AnchorGameObject;
+        public List<GameObject> AnchorSlotObjects = new List<GameObject>(); 
+        public Vector3 AnchorPosition => Anchor.gameObject.transform.position;
         
-        public FormationManager(List<Monster> NPCs, FormationPattern pattern, Vector3 position, Vector3 orientation )
-        {
-            this.pattern = pattern;
-            this.AnchorPosition = position;
+        public Vector3 Orientation {
+            get {
+                Quaternion rotation = AnchorGameObject.transform.rotation;
 
+                return new Vector3(rotation.x,rotation.y,rotation.z);
+            }
+            set => AnchorGameObject.transform.rotation = Quaternion.LookRotation(value);
+        }
+
+        public FormationManager(List<Monster> NPCs, FormationPattern pattern, Vector3 position, Vector3 orientation)
+        {
+            AnchorGameObject = GameObject.Instantiate(GameManager.Instance.AnchorPrefab, position, Quaternion.LookRotation(orientation));
+            Anchor = AnchorGameObject.GetComponent<Anchor>();
+
+            Anchor.FormationManager = this;
+
+            _pattern = pattern;
+            
             int i = 0;
             foreach (Monster npc in NPCs)
             {
                 SlotAssignment[npc] = i;
                 i++;
+                
+                GameObject slotObject = GameObject.Instantiate(GameManager.Instance.SlotPrefab, AnchorPosition, Anchor.transform.rotation);
+                
+                AnchorSlotObjects.Add(slotObject);
             }
+
+            Anchor.GetComponent<NavMeshAgent>().Warp(position);
+            
             // the pattern may define specific rules for the orientation...
-            this.Orientation = pattern.GetOrientation( this, orientation );
+            this.Orientation = pattern.GetOrientation( this, this.Orientation);
         }
 
         public void UpdateSlotAssignements()
@@ -49,10 +69,16 @@ namespace Assets.Scripts.IAJ.Unity.Formations
         public bool AddCharacter(Monster character)
         {
             var occupiedSlots = this.SlotAssignment.Count;
-            if (this.pattern.SupportSlot(occupiedSlots + 1))
+            if (_pattern.SupportsSlot(occupiedSlots + 1))
             {
                 SlotAssignment.Add(character, occupiedSlots);
+
+                GameObject slotObject = GameObject.Instantiate(GameManager.Instance.SlotPrefab, AnchorPosition, Anchor.transform.rotation);
+                
+                AnchorSlotObjects.Add(slotObject);
+                
                 this.UpdateSlotAssignements();
+                
                 return true;
             }
             else return false;
@@ -60,33 +86,36 @@ namespace Assets.Scripts.IAJ.Unity.Formations
 
         public void RemoveCharacter(Monster character)
         {
-            var slot = SlotAssignment[character];
             SlotAssignment.Remove(character);
+
+            if (SlotAssignment.Count != 0) {
+                GameObject anchorSlot = AnchorSlotObjects[0];
+                
+                GameObject.Destroy(anchorSlot);
+                AnchorSlotObjects.Remove(anchorSlot);
+            }
+            
             UpdateSlots();
         }
 
         public void UpdateSlots()
         {
+            if (SlotAssignment.Count == 0) {
+                return;
+            }
+            
             var anchor = AnchorPosition;
-
-            var orientationMatrix = Orientation;
 
 
             foreach (var npc in SlotAssignment.Keys)
             {
                 int slotNumber = SlotAssignment[npc];
-                var slot = pattern.GetSlotLocation(this, slotNumber);
+                var slot = _pattern.GetSlotLocation(this, slotNumber);
 
-                var locationPosition = anchor + orientationMatrix * slotNumber;
-                var locationOrientation = orientationMatrix + slot;
-
-                // and add drift componenet.
-
-                locationPosition -= Vector3.one * 0.1f;
-                //locationOrientation -= 0.1f;
-
+                AnchorSlotObjects[slotNumber].transform.position = slot;
+                AnchorSlotObjects[slotNumber].transform.rotation = Anchor.transform.rotation;
                 
-                npc.MoveTo(locationPosition);
+                npc.MoveTo(slot);
                 npc.GetComponent<NavMeshAgent>().updateRotation = true;
             }
         }

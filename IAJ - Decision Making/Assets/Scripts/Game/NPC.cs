@@ -61,7 +61,6 @@ namespace Assets.Scripts.Game
                 this.previousTarget = targetPosition;
 
                 navMeshAgent.SetDestination(targetPosition);
-
             }
         }
 

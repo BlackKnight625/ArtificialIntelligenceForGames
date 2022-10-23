@@ -37,7 +37,6 @@ namespace Assets.Scripts.Game.NPCs
         public Task BehaviourTree;
 
         private FormationManager formationManager;
-        public bool usingFormation;
 
         public virtual void Start()
         {
@@ -81,8 +80,6 @@ namespace Assets.Scripts.Game.NPCs
                     Invoke("CheckPlayerPosition", 0.5f);
                 }
             }
-            else if (usingFormation)
-                this.formationManager.UpdateSlots();
             
 
             else

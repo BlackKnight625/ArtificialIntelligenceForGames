@@ -6,7 +6,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using Assets.Scripts.Game;
 using Assets.Scripts.Game.NPCs;
+using Assets.Scripts.IAJ.Unity.DecisionMaking.BehaviorTree.BehaviourTrees;
 using Assets.Scripts.IAJ.Unity.DecisionMaking.ForwardModel;
+using Assets.Scripts.IAJ.Unity.Formations;
 using Object = UnityEngine.Object;
 
 public class GameManager : MonoBehaviour
@@ -23,6 +25,8 @@ public class GameManager : MonoBehaviour
     //public fields, seen by Unity in Editor
 
     public AutonomousCharacter Character;
+    public GameObject AnchorPrefab;
+    public GameObject SlotPrefab;
 
     [Header("UI Objects")]
     public Text HPText;
@@ -39,6 +43,8 @@ public class GameManager : MonoBehaviour
     public bool StochasticWorld;
     public bool SleepingNPCs;
     public bool BehaviourTreeNPCs;
+    public bool LineFormation;
+    public bool TriangularFormation;
 
     //fields
     public List<GameObject> chests { get; set; }
@@ -49,6 +55,8 @@ public class GameManager : MonoBehaviour
     public List<GameObject> patrols { get; set; }
     public Dictionary<string, List<GameObject>> disposableObjects { get; set; }
     public bool WorldChanged { get; set; }
+    public List<Monster> MonstersInFormation { get; set; }
+    public FormationManager FormationManager;
 
     private float nextUpdateTime = 0.0f;
     private float enemyAttackCooldown = 0.0f;
@@ -81,10 +89,16 @@ public class GameManager : MonoBehaviour
         this.enemies.AddRange(this.orcs);
         this.enemies.AddRange(this.dragons);
 
+        MonstersInFormation = new List<Monster>();
      
         //adds all enemies to the disposable objects collection
         foreach (var enemy in this.enemies)
         {
+            if (enemy.name.Contains("Formation")) {
+                Monster monster = enemy.GetComponent<Monster>();
+                    
+                MonstersInFormation.Add(monster);
+            }
 
             if (disposableObjects.ContainsKey(enemy.name))
             {
@@ -119,6 +133,38 @@ public class GameManager : MonoBehaviour
             }
             else this.disposableObjects.Add(potion.name, new List<GameObject>() { potion });
         }
+        
+        // Dealing with orcs in formation
+        if (MonstersInFormation.Count != 0) {
+            // There are orcs who will take up a formation
+
+            Vector3 position = new Vector3();
+            FormationPattern pattern;
+            
+            // Choosing a pattern
+            if (LineFormation) {
+                pattern = new LineFormation();
+            }
+            else if (TriangularFormation) {
+                pattern = new TriangularFormation();
+            }
+            else {
+                pattern = new LineFormation();
+            }
+            
+            foreach(Monster monster in MonstersInFormation) {
+                position += monster.transform.position;
+            }
+            
+            // Averaging the position
+            position /= MonstersInFormation.Count;
+
+            FormationManager = new FormationManager(MonstersInFormation, pattern, position, new Vector3(0, 0, -1));
+            
+            foreach(Monster monster in MonstersInFormation) {
+                FormationManager.AddCharacter(monster);
+            }
+        }
     }
 
     void FixedUpdate()
@@ -152,6 +198,10 @@ public class GameManager : MonoBehaviour
                 this.GameEnd.SetActive(true);
                 this.gameEnded = true;
                 this.GameEnd.GetComponentInChildren<Text>().text = "Victory \n GG EZ";
+            }
+
+            if (FormationManager != null) {
+                FormationManager.UpdateSlots();
             }
         }
     }
