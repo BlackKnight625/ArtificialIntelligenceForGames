@@ -9,7 +9,7 @@ namespace Assets.Scripts.IAJ.Unity.Formations
 
     public class TriangularFormation : FormationPattern 
     {
-        private static readonly float offset = 1.0f;
+        private static readonly float offset = 2.0f;
 
         public TriangularFormation() {
 

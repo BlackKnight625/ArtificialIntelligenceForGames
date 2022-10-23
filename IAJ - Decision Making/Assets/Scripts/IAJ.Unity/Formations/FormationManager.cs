@@ -115,7 +115,7 @@ namespace Assets.Scripts.IAJ.Unity.Formations
                 AnchorSlotObjects[slotNumber].transform.position = slot;
                 AnchorSlotObjects[slotNumber].transform.rotation = Anchor.transform.rotation;
                 
-                npc.MoveTo(slot);
+                npc.StartPathfinding(slot);
                 npc.GetComponent<NavMeshAgent>().updateRotation = true;
             }
         }
