@@ -46,7 +46,7 @@ public class TestAgent : Agent
 
         if (collision.gameObject.CompareTag("Goal"))
         {
-            AddReward(1f);
+            AddReward(10f);
             EndEpisode();
         }
         if (collision.gameObject.CompareTag("Wall"))
