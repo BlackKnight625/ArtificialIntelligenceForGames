@@ -33,14 +33,26 @@ public class PushAgentBasic : Agent
     public GameObject block;
 
     /// <summary>
+    /// The bad balls that shouldn't be pushed to the goal
+    /// </summary>
+    public GameObject[] badBalls;
+
+    /// <summary>
     /// Detects when the block touches the goal.
     /// </summary>
     [HideInInspector]
     public GoalDetect goalDetect;
 
+    /// <summary>
+    /// Detects when a bad ball touches the goal
+    /// </summary>
+    [HideInInspector]
+    public BadBallDetect[] badBallDetects;
+
     public bool useVectorObs;
 
     Rigidbody m_BlockRb;  //cached on initialization
+    Rigidbody[] m_BadBallRbs;  //cached on initialization
     Rigidbody m_AgentRb;  //cached on initialization
     Material m_GroundMaterial; //cached on Awake()
 
@@ -61,10 +73,22 @@ public class PushAgentBasic : Agent
         goalDetect = block.GetComponent<GoalDetect>();
         goalDetect.agent = this;
 
+        for (int i = 0; i < badBalls.Length; i++) {
+            badBallDetects[i] = badBalls[i].GetComponent<BadBallDetect>();
+            badBallDetects[i].agent = this;
+        }
+
         // Cache the agent rigidbody
         m_AgentRb = GetComponent<Rigidbody>();
         // Cache the block rigidbody
         m_BlockRb = block.GetComponent<Rigidbody>();
+        // Cache the bad balls
+        m_BadBallRbs = new Rigidbody[badBalls.Length];
+
+        for (int i = 0; i < badBalls.Length; i++) {
+            m_BadBallRbs[i] = badBalls[i].GetComponent<Rigidbody>();
+        }
+
         // Get the ground's bounds
         areaBounds = ground.GetComponent<Collider>().bounds;
         // Get the ground renderer so we can change the material when a goal is scored
@@ -113,6 +137,12 @@ public class PushAgentBasic : Agent
 
         // Swap ground material for a bit to indicate we scored.
         StartCoroutine(GoalScoredSwapGroundMaterial(m_PushBlockSettings.goalScoredMaterial, 0.5f));
+    }
+
+    public void ScoredBadBall() {
+        AddReward(-5f);
+        EndEpisode();
+        StartCoroutine(GoalScoredSwapGroundMaterial(m_PushBlockSettings.failMaterial, 0.5f));
     }
 
     /// <summary>
@@ -210,6 +240,17 @@ public class PushAgentBasic : Agent
         m_BlockRb.angularVelocity = Vector3.zero;
     }
 
+    public void ResetBadBalls() {
+        for (int i = 0; i < badBalls.Length; i++) {
+            badBalls[i].transform.position = GetRandomSpawnPos();
+
+            Rigidbody ballBody = m_BadBallRbs[i];
+
+            ballBody.velocity = Vector3.zero;
+            ballBody.angularVelocity = Vector3.zero;
+        }
+    }
+
     /// <summary>
     /// In the editor, if "Reset On Done" is checked then AgentReset() will be
     /// called automatically anytime we mark done = true in an agent script.
@@ -221,6 +262,7 @@ public class PushAgentBasic : Agent
         area.transform.Rotate(new Vector3(0f, rotationAngle, 0f));
 
         ResetBlock();
+        ResetBadBalls();
         transform.position = GetRandomSpawnPos();
         m_AgentRb.velocity = Vector3.zero;
         m_AgentRb.angularVelocity = Vector3.zero;
