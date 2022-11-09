@@ -24,19 +24,18 @@ public class TestAgent : Agent
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
         //Add an existential penalty
+        AddReward(-0.01f);
 
-        // TODO
-        //switch (actionBuffers.DiscreteActions[0])
-        //{
-        // See the available actions in the movement controller 
-        //}
-
+        movementController.SetDirection(actionBuffers.DiscreteActions[0]);
     }
 
     public override void CollectObservations(VectorSensor sensor)
     {
         // Here you can add extra observations that you want your agent to know of
         // for instance the agent's and goal's locations(raycasts are automatically perceived)
+
+        sensor.AddObservation(transform.localPosition);
+        sensor.AddObservation(movementController.GetGoalPosition());
 
         //sensor.AddObservation(?);
     }
@@ -45,15 +44,14 @@ public class TestAgent : Agent
     {
         // When the agent hits either a wall or the goal you should add a reward
 
-        // TODO
-        if (collision.gameObject.tag == "Goal")
+        if (collision.gameObject.CompareTag("Goal"))
         {
-            AddReward(0f);
+            AddReward(1f);
             EndEpisode();
         }
-        if (collision.gameObject.tag == "Wall")
+        if (collision.gameObject.CompareTag("Wall"))
         {
-            AddReward(0f);
+            AddReward(-1f);
             EndEpisode();
         }
     }
