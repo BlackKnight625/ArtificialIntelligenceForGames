@@ -1,6 +1,7 @@
 //Put this script on your blue cube.
 
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
@@ -32,6 +33,8 @@ public class PushAgentBasic : Agent
     /// </summary>
     public GameObject block;
 
+    public GameObject[] badBalls;
+
     /// <summary>
     /// Detects when the block touches the goal.
     /// </summary>
@@ -42,6 +45,7 @@ public class PushAgentBasic : Agent
 
     Rigidbody m_BlockRb;  //cached on initialization
     Rigidbody m_AgentRb;  //cached on initialization
+    List<Rigidbody> m_BadBallRbs;
     Material m_GroundMaterial; //cached on Awake()
 
     /// <summary>
@@ -60,6 +64,14 @@ public class PushAgentBasic : Agent
     {
         goalDetect = block.GetComponent<GoalDetect>();
         goalDetect.agent = this;
+
+        m_BadBallRbs = new List<Rigidbody>();
+
+        foreach (var badBall in badBalls) {
+            badBall.GetComponent<BadBallDetect>().agent = this;
+
+            m_BadBallRbs.Add(badBall.GetComponent<Rigidbody>());
+        }
 
         // Cache the agent rigidbody
         m_AgentRb = GetComponent<Rigidbody>();
@@ -113,6 +125,17 @@ public class PushAgentBasic : Agent
 
         // Swap ground material for a bit to indicate we scored.
         StartCoroutine(GoalScoredSwapGroundMaterial(m_PushBlockSettings.goalScoredMaterial, 0.5f));
+    }
+
+    public void ScoredABadBall() {
+        // We use a reward of -5.
+        AddReward(-5f);
+
+        // By marking an agent as done AgentReset() will be called automatically.
+        EndEpisode();
+
+        // Swap ground material for a bit to indicate we scored.
+        StartCoroutine(GoalScoredSwapGroundMaterial(m_PushBlockSettings.failMaterial, 0.5f));
     }
 
     /// <summary>
@@ -208,6 +231,15 @@ public class PushAgentBasic : Agent
 
         // Reset block angularVelocity back to zero.
         m_BlockRb.angularVelocity = Vector3.zero;
+
+        foreach (var badBall in badBalls) {
+            badBall.transform.position = GetRandomSpawnPos();
+        }
+
+        foreach (var badBallRb in m_BadBallRbs) {
+            badBallRb.velocity = Vector3.zero;
+            badBallRb.angularVelocity = Vector3.zero;
+        }
     }
 
     /// <summary>
