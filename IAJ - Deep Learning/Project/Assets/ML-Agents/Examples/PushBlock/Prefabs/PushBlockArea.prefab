@@ -540,7 +540,8 @@ MonoBehaviour:
   - block
   - goal
   - wall
-  m_RaysPerDirection: 3
+  - bad
+  m_RaysPerDirection: 5
   m_MaxRayDegrees: 90
   m_SphereCastRadius: 0.5
   m_RayLength: 12
