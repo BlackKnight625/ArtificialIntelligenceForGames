@@ -472,7 +472,7 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 5022602860645237092, guid: 140f66930b2eae04c91f3b9b0c3ba83e, type: 3}
+  m_Model: {fileID: 5022602860645237092, guid: 7e42d35b580d1254e9144045a726e7f2, type: 3}
   m_InferenceDevice: 2
   m_BehaviorType: 0
   m_BehaviorName: PushBlock
