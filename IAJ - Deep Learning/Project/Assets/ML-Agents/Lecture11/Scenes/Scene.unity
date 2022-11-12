@@ -1095,6 +1095,7 @@ Transform:
   m_LocalRotation: {x: 0.51054287, y: 0, z: 0, w: 0.8598523}
   m_LocalPosition: {x: 17.33, y: 32.8, z: -2.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -1188,6 +1189,7 @@ Transform:
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -1416,7 +1418,8 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Model
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 5022602860645237092, guid: 8cb5c629e8e621d45a22ae3f21af41ce,
+        type: 3}
     - target: {fileID: 1029864551396147678, guid: c11735a1a22c4ff41943e2c9b2222119,
         type: 3}
       propertyPath: m_InferenceDevice
